@@ -1,0 +1,20 @@
+{
+  "name": "greenenergy",
+  "version": "1.0.0",
+  "description": "111",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dayjs": "^1.9.4"
+  },
+  "standard": {
+    "globals": {
+      "wx": false,
+      "uni": false
+    }
+  }
+}

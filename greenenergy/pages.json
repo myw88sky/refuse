@@ -1,0 +1,126 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "巨能回收"
+			}
+		}
+	    ,{
+            "path" : "pages/order/order",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "订单",
+                "enablePullDownRefresh": false
+            }
+            
+        },
+		{
+		    "path" : "pages/order/addOrder",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "下单",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		}
+        ,{
+            "path" : "pages/me/me",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "我的",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/order/address",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "地址管理",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/order/add-address",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "地址管理",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/order/search-address",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "搜寻地址",
+				"navigationStyle": "custom",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/shopping/shopping",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "商城",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/me/login",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
+	"tabBar": {
+	    "color": "#C6C6C6",
+	    "selectedColor": "#31b977",
+	    "borderStyle": "white",
+	    "backgroundColor": "#ffffff",
+	    "list": [
+	      {
+	        "text": "首页",
+	        "pagePath": "pages/index/index",
+	        "iconPath": "/static/images/tabBar_icon01.png",
+	        "selectedIconPath": "/static/images/tabBar_icon01_active.png"
+	      },
+	      {
+	        "text": "订单",
+	        "pagePath": "pages/order/order",
+	        "iconPath": "/static/images/tabBar_icon02.png",
+	        "selectedIconPath": "/static/images/tabBar_icon02_active.png"
+	      },
+		  /* {
+		    "text": "商城",
+		    "pagePath": "pages/shopping/shopping",
+		    "iconPath": "/static/images/tabBar_icon04.png",
+		    "selectedIconPath": "/static/images/tabBar_icon04_active.png"
+		  }, */
+	      {
+	        "text": "我的",
+	        "pagePath": "pages/me/me",
+	        "iconPath": "/static/images/tabBar_icon03.png",
+	        "selectedIconPath": "/static/images/tabBar_icon03_active.png"
+	      }
+	    ]
+	},
+	"globalStyle": {
+		"backgroundTextStyle": "light",
+		"navigationBarBackgroundColor": "#31b977",
+		"navigationBarTextStyle": "white",
+		"onReachBottomDistance": 50,
+		"navigationBarTitleText": "uni-app",
+		"backgroundColor": "#F8F8F8"
+	},
+	"dependencies": {
+		"dayjs": "^1.8.22"
+	}
+}
