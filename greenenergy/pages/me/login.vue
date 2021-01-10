@@ -3,14 +3,14 @@
 		<view class="logo">
 			<image src="/static/images/xiaoniu.png"></image>
 		</view>
-		<view class="logo-txt">
-			小牛回收
-		</view>
+<!-- 		<view class="logo-txt">
+			小牛换吧
+		</view> -->
 		<view class="login">
-		   <button type="primary" v-if="!isUser" style="background: #267426;" open-type="getUserInfo" @getuserinfo="wxGetUserInfo">
+		   <button type="primary" v-if="!isUser" style="background: #5AA28A;" open-type="getUserInfo" @getuserinfo="wxGetUserInfo">
 				微信登录
 		   </button>
-		   <button type="primary" v-if="isUser" style="background: #267426;" @click="addWxUser()">
+		   <button type="primary" v-if="isUser" style="background: #5AA28A;" @click="addWxUser()">
 		   		微信登录
 		   </button>
 		</view>
@@ -32,7 +32,7 @@
 			}
 		},
 		onLoad(){
-			if(getApp().globalData.wUserInfo){
+			if(JSON.stringify(getApp().globalData.wUserInfo)!='{}'){
 				this.wUserInfo=getApp().globalData.wUserInfo;
 				this.isUser=true
 			}
@@ -89,7 +89,7 @@
 				//登录
 				let wUserInfo=getApp().globalData.wUserInfo
 				let data={
-					username:wUserInfo.nickName,
+					username:this.wUserInfo.weiOpenId,
 					password:"123456"
 				}
 				fakeLogin(data).then(res=>{
@@ -108,8 +108,8 @@
 
 <style>
   .logo{
-	  width: 300upx;
-	  height: 300upx;
+	  width: 180upx;
+	  height: 180upx;
 	  margin: 0 auto;
 	  margin-top: 260upx;
   }

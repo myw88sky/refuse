@@ -61,7 +61,12 @@
         "setting" : {
             "urlCheck" : false
         },
-        "usingComponents" : true
+        "usingComponents" : true,
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "需要您授权使用位置信息"
+            }
+        }
     },
     "mp-alipay" : {
         "usingComponents" : true

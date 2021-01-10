@@ -125,10 +125,12 @@
 			      uni.navigateTo({
 			      	url:"../me/login"
 			      })
+			   }else{
+				  uni.navigateTo({
+				  	url:"../order/addOrder?type="+type
+				  }) 
 			   }
-				uni.navigateTo({
-					url:"../order/addOrder?type="+type
-				})
+				
 			},
 			login(){
 				this.wUserInfo=getApp().globalData.wUserInfo

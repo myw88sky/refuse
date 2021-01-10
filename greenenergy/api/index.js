@@ -149,6 +149,17 @@ export function getHsOrderList(data) {
 }
 
 /**
+ * 完成订单
+   * */
+export function getHsOrderListFinish(data) {
+  return request({
+    url: '/hsOrderInf/getHsOrderList?status=5',
+    method: 'post',
+    data
+  })
+}
+
+/**
  * 订单详细 
   * */
 export function selectOrderDetailById(data) {

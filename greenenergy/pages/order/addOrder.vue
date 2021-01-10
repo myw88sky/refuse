@@ -18,7 +18,7 @@
 			</view>
 		</view>
 	    <view class="jrzdj">
-			<view class="jrzdj-title">近日指导价</view>
+			<view class="jrzdj-title">今日指导价</view>
 			<view class="jrzdj-content">
 				<view class="jrzdj-content-item" v-for="(item,index) in goodsList" :key="index">
 					<view>
@@ -209,7 +209,8 @@
 					useDate: this.formatDate(new Date()), // 预约日期
 					userTime:"",//预约时间
 					userAddress:"",//预约地址
-					addressId:""
+					addressId:"",
+					districtCode:"",
 				},
 				attachmentList: [],
 				uploadFileUrl: BASEURL+'/hsOrderInf/uploadOrderImg', //替换成你的后端接收文件地址
@@ -227,12 +228,26 @@
 		
 		onLoad(e){
 			this.type=e.type
-			this.getHsTypeList()
+		},
+		onShow(){
+			let userInfo=getApp().globalData.userInfo
+			if(JSON.stringify(userInfo)=='{}'){
+			   uni.navigateTo({
+			   	url:"../me/login"
+			   })
+			}
+		    this.getHsTypeList()
 			this.myUserAddress()
 		},
 		methods: {
 			addGoods(){
-				
+				let self=this;
+				for(let i=0;i<self.orderGoods.length;i++){
+					if(self.orderGoods[i].typeId===self.typeList[self.type-1].id){
+						self.$api.msg("同一品类只能添加一个");
+						return false;
+					}
+				}
 				this.orderGoods.push({
 					typeName:this.typeList[this.type-1].typeName,
 					typeId:this.typeList[this.type-1].id,
@@ -258,9 +273,7 @@
 					}else{
 						addHsOrder('0')
 					}
-					
 				}
-				
 			},
 			openModal(item){
 				this.showModal=true;
@@ -315,7 +328,7 @@
 					return false;
 				}
 				let data={
-					 districtCode:"340123",
+					 districtCode:this.model.districtCode,
 					 details:this.orderGoods.length>0?this.orderGoods:[{
 						typeId:this.typeList[this.type-1].id,
 						estimateWeight:this.getWeightContent(this.weight),
@@ -338,6 +351,7 @@
 			getSelectAddress(item){
 				this.model.userAddress=item.locationAddress+"("+item.addressDetail+")"
 			    this.model.addressId=item.id;
+				this.model.districtCode=item.districtCode;
 			},
 			getAtts(value){
 			    console.log("atts",value);
@@ -452,7 +466,8 @@
 						if(this.listAddress&&this.listAddress.length>0){
 							if(this.listAddress[0].defaultFlag=="1"){
 								this.model.userAddress=this.listAddress[0].locationAddress+"("+this.listAddress[0].addressDetail+")",//预约地址
-								this.model.addressId=this.listAddress[0].id
+								this.model.addressId=this.listAddress[0].id,
+								this.model.districtCode=this.listAddress[0].districtCode
 							}
 							
 						}
@@ -475,7 +490,7 @@
 	width: calc(100% -60upx);
  }
  .hspl-title{
-	 font-size: 40upx;
+	 font-size: 36upx;
 	 font-weight: 600;
 	 color: #222222;
  }
@@ -504,7 +519,7 @@
 	background-color: #FFFFFF;
  }
  .jrzdj-title{
-	 font-size: 40upx;
+	 font-size: 36upx;
 	 font-weight: 600;
 	 color: #222222;
  }
@@ -545,7 +560,7 @@
 	 background-color: #FFFFFF;
  }
  .hsyq-title{
- 	 font-size: 40upx;
+ 	 font-size: 36upx;
  	 font-weight: 600;
  	 color: #222222;
  }
@@ -714,8 +729,8 @@
 	position:fixed;
 	bottom:60upx;
 	left:30upx;
-	width:140upx;
-	height:140upx;
+	width:100upx;
+	height:100upx;
 	z-index: 99;
 }
 .order-goods image{
@@ -731,8 +746,8 @@
 	 background: #E64043;
 	 color: #FFFFFF;
 	 position:fixed;
-	 bottom:140upx;
-	 left:140upx;
+	 bottom:115upx;
+	 left:100upx;
 	 text-align: center;
 }
 .order-modal{

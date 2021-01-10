@@ -37,7 +37,7 @@ const request = (config) => {
 				//重定向跳转到首页
 				if (res.statusCode === 302) {
 					uni.reLaunch({
-						url: "/pages/login/selectRole"
+						url: "/pages/index/index.vue"
 					})
 				}
 			},

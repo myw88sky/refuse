@@ -41,6 +41,9 @@
 </template>
 
 <script>
+	import {
+		getLocation
+	} from '@/common/qqmap-util.js'
 	import {myUserAddress,updateUserAddress,deleteUserAddress} from"@/api/index.js"
 	export default {
 		data() {
@@ -52,9 +55,31 @@
 			
 		},
 		onShow() {
+			this.getCurLocation()
 		   this.myUserAddress()	
 		},
 		methods: {
+			getCurLocation() {
+				 uni.showLoading({
+				 	title: '加载中...'
+				 })
+				var self = this;
+				getLocation().then(res => {
+						const {
+							longitude,
+							latitude
+						} = res
+						uni.hideLoading();
+					}).catch(arr => {
+						uni.hideLoading();
+						if(arr&&arr.errCode===1&&arr.errMsg==="getLocation:fail:ERROR_NETWORK"){
+							self.$api.msg("检查网络是否开启",3000)
+						}
+						if(arr&&arr.errCode===2&&arr.errMsg==="getLocation:fail:ERROR_NOCELL&WIFI_LOCATIONSWITCHOFF"){
+							self.$api.msg("检查gps是否开启",3000)
+						}
+					})
+			},
 			editAddress(item=""){
 				if(item==""){
 					uni.navigateTo({
@@ -130,6 +155,8 @@
 						if(res.returnCode=="2"){
 							this.$api.msg("保存成功");
 						    this.myUserAddress()	
+						}else if (res.cancel) {
+							console.log('用户点击取消');
 						}
 					})
 			},
@@ -169,9 +196,9 @@ page{
 }
 .address-default{
 	background: #ED3F14;
-	border-radius: 30upx;
-	padding: 10upx 20upx;
-	font-size: 32upx;
+	border-radius: 28upx;
+	padding: 3upx 15upx;
+	font-size: 28upx;
 	font-weight: 500;
 	color: #FFFFFF;
 }

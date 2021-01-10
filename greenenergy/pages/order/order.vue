@@ -72,22 +72,23 @@
 							<view class="message-card-right-content-item" v-if="iem.actualPrice"  >
 							   {{iem.actualPrice+'(元)'}}
 							</view>
-							<view class="message-card-right-content-item" v-if="item.state=='2'&&userType=='3'" @click.stop="openModal(iem)" style="color: #19BE6B;">
+							<view class="message-card-right-content-item" v-if="item.state=='3'&&userType=='3'" @click.stop="openModal(iem)" style="color: #19BE6B;">
 								完善订单
 							</view>
 						</view>
 					   <view class="message-card-right-btns" v-if="userType=='4'">
-							<view class="message-card-right-btns-reject" v-if="item.state=='2'" @click.stop="reback(item)">撤回</view>
-							<view class="message-card-right-btns-reject" v-if="item.state=='1'" @click.stop="del(item)">删除</view>
+							<view class="message-card-right-btns-reject" v-if="item.state=='2'" @click.stop="reback(item)"><view class="message-card-right-btns-reject-btn">撤回</view></view>
+							<view class="message-card-right-btns-reject" v-if="item.state=='1'" @click.stop="del(item)"><view class="message-card-right-btns-reject-btn">删除</view></view>
 							<!-- <view class="message-card-right-btns-divider"></view> -->
-							<view class="message-card-right-btns-agree" v-if="item.state=='2'" @click.stop="agree(item)">确认回收</view>
-							<view class="message-card-right-btns-agree" v-if="item.state=='4'" @click.stop="agree1(item)">确认到账</view>
+							<view class="message-card-right-btns-agree" v-if="item.state=='2'" @click.stop="agree(item)"><view class="message-card-right-btns-agree-btn">确认回收</view></view>
+							<view class="message-card-right-btns-agree" v-if="item.state=='3'"  style="color: #222222;background: #FFFFFF;">等待到账...</view>
+							<view class="message-card-right-btns-agree" v-if="item.state=='4'" @click.stop="agree1(item)"><view class="message-card-right-btns-agree-btn">确认到账</view></view>
 						</view>
 						<view class="message-card-right-btns" v-if="userType=='3'">
 							
 							<!-- <view class="message-card-right-btns-divider"></view> -->
-							<view class="message-card-right-btns-agree" v-if="item.state=='1'" @click.stop="agree2(item)">确认</view>
-							<view class="message-card-right-btns-agree" v-if="item.state=='3'" @click.stop="agree3(item)">确认支付</view>
+							<view class="message-card-right-btns-agree" v-if="item.state=='1'" @click.stop="agree2(item)"><view class="message-card-right-btns-agree-btn">确认</view></view>
+							<view class="message-card-right-btns-agree" v-if="item.state=='3'" @click.stop="agree3(item)"><view class="message-card-right-btns-agree-btn">确认支付</view></view>
 						</view>
 					</view>
 				</view>
@@ -177,7 +178,7 @@
 	import iTab from '@/components/iview/tab/index'
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue'
 	import neilModal from '@/components/neil-modal/neil-modal.vue';
-	import {getHsOrderList,deleteOrderById,recoveredOrderById,updateOrderDetail,confiremedPaidOrderById,confirmedOrderById,payOrderById} from"@/api/index.js"
+	import {getHsOrderList,getHsOrderListFinish,deleteOrderById,recoveredOrderById,updateOrderDetail,confiremedPaidOrderById,confirmedOrderById,payOrderById} from"@/api/index.js"
 	export default {
 	    components: {
 			iTabs,
@@ -308,7 +309,7 @@
 						}],
 						createuserid:this.userInfo.id 
 					}
-					getHsOrderList(data).then(res => {
+					getHsOrderListFinish(data).then(res => {
 						this.isShowNodata = true
 						this.todoList=[];
 						if (res) {
@@ -565,7 +566,7 @@
 						font-size: 32upx;
 						font-weight: 400;
 						color: rgba(34, 34, 34, 1);
-						line-height: 45upx;
+						line-height: 60upx;
 						padding-top: 15upx;
 						padding-left: 20upx;
 						padding-right: 20upx;
@@ -582,16 +583,29 @@
 
 						&-reject {
 							flex: 1;
-							color: #222222;
-							display: inline-block;
-							text-align: center;
+							display: flex;
+							justify-content:center;
+							&-btn{
+								width: 200upx;
+								background: #FF4259;
+								border-radius: 10upx;
+								color: #FFFFFF;
+								text-align: center;
+							}
+							
 						}
 
 						&-agree {
 							flex: 1;
-							color: #222222;
-							display: inline-block;
-							text-align: center;
+							display: flex;
+							justify-content:center;
+							&-btn{
+								width: 200upx;
+								background: #31b977;
+								border-radius: 10upx;
+								color: #FFFFFF;
+								text-align: center;
+							}
 						}
 					}
 

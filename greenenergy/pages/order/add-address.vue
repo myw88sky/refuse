@@ -32,7 +32,10 @@
 			  <view class="address-view-right"  style="height: 180upx; display: flex;
     align-items: center;
     vertical-align: center; "  @click="onChangeAddress()">
-				  <view style="line-height: normal;">{{model.locationAddress}}</view>
+				  <view style="line-height: normal;" v-if="model.locationAddress">{{model.locationAddress}}</view>
+				  <view style="line-height: normal;position: absolute;right: 60upx;" v-else>
+					  <uni-icons type="location-filled" color="#31b977" size="24"></uni-icons>
+				  </view>
 			    <!-- <input v-model="model.address" style="line-height: 180upx;height: 180upx;" />	 -->
 			  </view>
 			</view>
@@ -56,12 +59,16 @@
 </template>
 
 <script>
+	import uniIcons from "@/components/uni-icons/uni-icons.vue"
 	import {
 		reverseGeocoder,
 		getLocation
 	} from '@/common/qqmap-util.js'
 	import {addUserAddress,updateUserAddress} from"@/api/index.js"
 	export default {
+		components:{
+			uniIcons
+		},
 		data() {
 			return {
 				model:{
@@ -71,7 +78,8 @@
 					longitude:"",
 					latitude:"",
 					locationAddress:"",//地图定位获得的地址
-					addressDetail:""//手动填写的地址
+					addressDetail:"",//手动填写的地址
+					districtCode:""
 				},
 				items:[{value:1,name:"男士"},{value:2,name:"女士"}]
 			}
@@ -112,12 +120,32 @@
 				if(data.id&&data.id!=""){
 					this.updateUserAddress();
 				}else{
+					if(this.model.fullName==""){
+						this.$api.msg("联系人不能为空");
+						return false
+					}
+					if(this.model.telphone==""){
+						this.$api.msg("电话不能为空");
+						return false
+					}
+					if(this.model.locationAddress==""){
+						this.$api.msg("定位地址不能为空");
+						return false
+					}
+					
+					if(this.model.addressDetail==""){
+						this.$api.msg("备注地址不能为空");
+						return false
+					}
+					
 					addUserAddress(data).then(res=>{
 						if(res.returnCode=="2"){
 							this.$api.msg("保存成功");
 							uni.navigateBack({
 								delta:1
 							})
+						}else{
+							this.$api.msg(res.description)
 						}
 					})
 				}
@@ -125,12 +153,31 @@
 			},
 			updateUserAddress(){
 			    let data=this.model
+				if(this.model.fullName==""){
+					this.$api.msg("联系人不能为空");
+					return false
+				}
+				if(this.model.telphone==""){
+					this.$api.msg("电话不能为空");
+					return false
+				}
+				if(this.model.locationAddress==""){
+					this.$api.msg("定位地址不能为空");
+					return false
+				}
+				
+				if(this.model.addressDetail==""){
+					this.$api.msg("备注地址不能为空");
+					return false
+				}
 				updateUserAddress(data).then(res=>{
 					if(res.returnCode=="2"){
 						this.$api.msg("保存成功");
 						uni.navigateBack({
 							delta:1
 						})
+					}else{
+						this.$api.msg(res.description)
 					}
 				})
 			},
@@ -138,6 +185,9 @@
 				let self=this;
 				reverseGeocoder(location).then(res => {
 						console.log('当前位置信息：', res)
+						if(res.result){
+							self.model.districtCode=res.result.ad_info.adcode
+						}
 						
 					}).catch(err => {
 						
