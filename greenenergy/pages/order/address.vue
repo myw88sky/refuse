@@ -155,8 +155,6 @@
 						if(res.returnCode=="2"){
 							this.$api.msg("保存成功");
 						    this.myUserAddress()	
-						}else if (res.cancel) {
-							console.log('用户点击取消');
 						}
 					})
 			},

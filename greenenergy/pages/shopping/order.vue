@@ -1,11 +1,10 @@
 <template>
 	<view class="page">
 		<view class="message" >
-			
 			<!-- itab -->
 			<view class="message-tabs">
 				<i-tabs v-model="current"  @change="tabChange">
-					<i-tab  item-key="1" title="待办理"></i-tab>
+					<i-tab  item-key="1" title="待发货"></i-tab>
 					<i-tab  item-key="2" title="已完成"></i-tab>
 					<!-- <i-tab  item-key="3" title="提醒"></i-tab> -->
 				</i-tabs>
@@ -18,80 +17,62 @@
 						{{item.createUserName}}
 					</view> -->
 					<view class="message-card-topRight">
-						{{getState(item.state)}}
+						{{getState(item.status)}}
 					</view>
 					<view class="message-card-right" >
 						<view class="message-card-right-arrow"></view>
 						
 						<view class="message-card-right-title">
 							<view class="message-card-right-title-left">
-								预约日期:
+								兑换物品:
 							</view>
 							<view class="message-card-right-title-right" style="flex:2">
-								{{item.appointDate}}
+								{{item.goodsName}}
 							</view>
 						</view>
 						<view class="message-card-right-title">
 							<view class="message-card-right-title-left">
-								预约时间:
+								兑换数量:
 							</view>
 							<view class="message-card-right-title-right" style="flex:2">
-								{{item.appointTime}}
+								{{item.goodsNum}}
 							</view>
 						</view>
 						<view class="message-card-right-title">
 							<view class="message-card-right-title-left">
-								预约重量:
+								兑换时间:
 							</view>
 							<view class="message-card-right-title-right" style="flex:2">
-								{{item.orderDetails[0].estimateWeight}}
+								{{item.createTimeStr}}
 							</view>
 						</view>
 						<view class="message-card-right-title">
 							<view class="message-card-right-title-left">
-								预约地点:
+								兑换积分:
 							</view>
 							<view class="message-card-right-title-right" style="flex:2">
-								{{item.locationAddress}}
+								{{item.score}}
 							</view>
 						</view>
-						<view class="message-card-right-title">
-							<view class="message-card-right-title-left" style="font-weight: 550;">
-								预约物品
+						<view class="message-card-right-title" v-if="item.status>0">
+							<view class="message-card-right-title-left">
+								快递名称:
 							</view>
-							<view class="message-card-right-title-right" >
-							</view>
-						</view>
-						<view class="message-card-right-content" v-for="(iem,index1) in item.orderDetails" :key="index1">
-							<view class="message-card-right-content-item">
-								{{iem.typeName}}
-							</view>
-							<view class="message-card-right-content-item">
-								{{iem.actualWeight?iem.actualWeight+'(公斤)':iem.estimateWeight}}
-							</view>
-							<view class="message-card-right-content-item"  v-if="item.state=='1'">
-								
-							</view>
-							<view class="message-card-right-content-item" v-if="iem.actualPrice"  >
-							   {{iem.actualPrice+'(元)'}}
-							</view>
-							<view class="message-card-right-content-item" v-if="item.state=='3'&&userType=='3'" @click.stop="openModal(iem)" style="color: #19BE6B;">
-								完善订单
+							<view class="message-card-right-title-right" style="flex:2">
+								{{item.expressName}}
 							</view>
 						</view>
-					   <view class="message-card-right-btns" v-if="userType=='4'">
-							<view class="message-card-right-btns-reject" v-if="item.state=='2'" @click.stop="reback(item)"><view class="message-card-right-btns-reject-btn">撤回</view></view>
-							<view class="message-card-right-btns-reject" v-if="item.state=='1'" @click.stop="del(item)"><view class="message-card-right-btns-reject-btn">删除</view></view>
-							<!-- <view class="message-card-right-btns-divider"></view> -->
-							<view class="message-card-right-btns-agree" v-if="item.state=='2'" @click.stop="agree(item)"><view class="message-card-right-btns-agree-btn">确认回收</view></view>
-							<view class="message-card-right-btns-agree" v-if="item.state=='3'"  style="color: #222222;background: #FFFFFF;">等待到账...</view>
-							<view class="message-card-right-btns-agree" v-if="item.state=='4'" @click.stop="agree1(item)"><view class="message-card-right-btns-agree-btn">确认到账</view></view>
+						<view class="message-card-right-title" v-if="item.status>0">
+							<view class="message-card-right-title-left">
+								快递单号:
+							</view>
+							<view class="message-card-right-title-right" style="flex:2">
+								{{item.expressOrderNo}}
+							</view>
 						</view>
-						<view class="message-card-right-btns" v-if="userType=='3'">
-							
-							<!-- <view class="message-card-right-btns-divider"></view> -->
-							<view class="message-card-right-btns-agree" v-if="item.state=='1'" @click.stop="agree2(item)"><view class="message-card-right-btns-agree-btn">确认</view></view>
-							<view class="message-card-right-btns-agree" v-if="item.state=='3'" @click.stop="agree3(item)"><view class="message-card-right-btns-agree-btn">确认支付</view></view>
+					   <view class="message-card-right-btns" >
+							<view class="message-card-right-btns-reject" v-if="item.status==0" @click.stop="reback(item)"><view class="message-card-right-btns-reject-btn">取消</view></view>
+							<view class="message-card-right-btns-agree" v-if="item.status==1" @click.stop="agree3(item)"><view class="message-card-right-btns-agree-btn">签收</view></view>
 						</view>
 					</view>
 				</view>
@@ -99,62 +80,59 @@
 			</view>
 			<view v-if="current == '2'">
 				<view class="message-card" @click="toView2(item)" :key="index" v-for="(item, index) in todoList">
-					<view class="message-card-topRight" style="background:#31b977 ;">
-						已完成
+					<view class="message-card-topRight" :style="{'background':item.status==2||item.status==4?'#31b977':'#F0AD4E'}">
+						{{getState(item.status)}}
 					</view>
 					<view class="message-card-right" >
 						<view class="message-card-right-arrow"></view>
 						
 						<view class="message-card-right-title">
 							<view class="message-card-right-title-left">
-								预约日期:
+								兑换物品:
 							</view>
 							<view class="message-card-right-title-right" style="flex:2">
-								{{item.appointDate}}
+								{{item.goodsName}}
 							</view>
 						</view>
 						<view class="message-card-right-title">
 							<view class="message-card-right-title-left">
-								预约时间:
+								兑换数量:
 							</view>
 							<view class="message-card-right-title-right" style="flex:2">
-								{{item.appointTime}}
+								{{item.goodsNum}}
 							</view>
 						</view>
 						<view class="message-card-right-title">
 							<view class="message-card-right-title-left">
-								预约重量:
+								兑换时间:
 							</view>
 							<view class="message-card-right-title-right" style="flex:2">
-								{{item.orderDetails[0].estimateWeight}}
+								{{item.createTimeStr}}
 							</view>
 						</view>
 						<view class="message-card-right-title">
 							<view class="message-card-right-title-left">
-								预约地点:
+								兑换积分:
 							</view>
 							<view class="message-card-right-title-right" style="flex:2">
-								{{item.locationAddress}}
+								{{item.score}}
 							</view>
 						</view>
-						<view class="message-card-right-title">
-							<view class="message-card-right-title-left" style="font-weight: 700;">
-								预约物品
+						<view class="message-card-right-title" v-if="item.status>0&&item.status!=3">
+							<view class="message-card-right-title-left">
+								快递名称:
 							</view>
-							<view class="message-card-right-title-right" >
+							<view class="message-card-right-title-right" style="flex:2">
+								{{item.expressName}}
 							</view>
 						</view>
-						<view class="message-card-right-content" v-for="(iem,index1) in item.orderDetails" :key="index1">
-							<view class="message-card-right-content-item">
-								{{iem.typeName}}
+						<view class="message-card-right-title" v-if="item.status>0&&item.status!=3">
+							<view class="message-card-right-title-left">
+								快递单号:
 							</view>
-							<view class="message-card-right-content-item">
-								{{iem.actualWeight?iem.actualWeight+'(公斤)':iem.estimateWeight}}
+							<view class="message-card-right-title-right" style="flex:2">
+								{{item.expressOrderNo}}
 							</view>
-							<view class="message-card-right-content-item"   >
-							   {{iem.actualPrice?iem.actualPrice+'(元)':''}}
-							</view>
-			
 						</view>
 					</view>
 				</view>
@@ -184,7 +162,7 @@
 	import iTab from '@/components/iview/tab/index'
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue'
 	import neilModal from '@/components/neil-modal/neil-modal.vue';
-	import {getHsOrderList,getHsOrderListFinish,deleteOrderById,recoveredOrderById,updateOrderDetail,confiremedPaidOrderById,confirmedOrderById,payOrderById} from"@/api/index.js"
+	import {getMyGoodsExchangeInfo,confirmedGoodByChangeId,cannelExchangeByChangeId} from"@/api/order.js"
 	export default {
 	    components: {
 			iTabs,
@@ -248,13 +226,15 @@
 		methods: {
 			getState(state){
 				switch(state){
-					case 1: return "待回收";
+					case 0: return "已下单";
 					break;
-					case 2: return "待确认";
+					case 1: return "已发货";
 					break;
-					case 3: return "待支付";
+					case 2: return "确定收货";
 					break;
-					case 4: return "待到账";
+					case 3: return "已取消";
+					break;
+					case 4: return "已自动收货";
 					break;
 				}
 			},
@@ -276,26 +256,12 @@
 				// 根据当前的current 来加载不同的function
 				if (this.current == '1') {
 					uni.showLoading();
-					let data=this.userType=="3"?{
+					let data={
 						page:0,
-						row:10,
-						queryConditions:[{
-						  queryConditions:"",//查询字段名,处理人
-						  operation:"",//比较符
-						  queryValue:"" //比较值
-						}],
-					}:{
-						page:0,
-						row:10,
-						queryConditions:[{
-						  queryConditions:"",//查询字段名,处理人
-						  operation:"",//比较符
-						  queryValue:"" //比较值
-						}],
-						createuserid:this.userInfo.id 
+						rows:10,
+						status:"1",
 					}
-					
-					getHsOrderList(data).then(res => {
+					getMyGoodsExchangeInfo(data).then(res => {
 						this.todoList=[];
 						this.isShowNodata = true
 						if (res) {
@@ -308,25 +274,12 @@
 					})
 				} else if (this.current == '2') {
 					uni.showLoading();
-					let data=this.userType=="3"?{
+					let data={
 						page:0,
-						row:10,
-						queryConditions:[{
-						  queryConditions:"",//查询字段名,处理人
-						  operation:"",//比较符
-						  queryValue:"" //比较值
-						}],
-					}:{
-						page:0,
-						row:10,
-						queryConditions:[{
-						  queryConditions:"",//查询字段名,处理人
-						  operation:"",//比较符
-						  queryValue:"" //比较值
-						}],
-						createuserid:this.userInfo.id 
+						rows:10,
+						status:"0",
 					}
-					getHsOrderListFinish(data).then(res => {
+					getMyGoodsExchangeInfo(data).then(res => {
 						this.isShowNodata = true
 						this.todoList=[];
 						if (res) {
@@ -343,11 +296,6 @@
 				this.todoList = [];
 				this.page=0;
 				this.row=100;
-				this.queryConditions=[{
-				  queryConditions:"",//查询字段名,处理人
-				  operation:"",//比较符
-				  queryValue:"" //比较值
-				}];
 			},
 			onScrolltolower() {
 				if (!this.isMore) return;
@@ -397,119 +345,36 @@
 				this.orderGoodsInfo=item;
 			},
 			//客户撤回
-			reback(){
+			reback(item){
+				let self=this;
 				uni.showModal({
-					title: '撤回订单',
-					    content: '请联系18255157968后台管理人员帮你撤回',
+					title: '撤回兑换',
+					    content: '确定撤回兑换',
 						showCancel:false,
 					    success: function (res) {
 						if (res.confirm) {
-							console.log('用户点击确定');
-						}
-					}
-				})
-			},
-			// 客户确认回收
-			agree(item) {
-				let self=this;
-				recoveredOrderById(item.id).then(res=>{
-					if(res.returnCode=="0"){
-						self.initPage()
-						self.searchInfo()
-					}
-				})
-			},
-			// 客户确认收款
-			agree1(item) {
-				let self=this;
-				confiremedPaidOrderById(item.id).then(res=>{
-					if(res.returnCode=="0"){
-						self.initPage()
-						self.searchInfo()
-					}
-				})
-			},
-			// 员工同意接口
-			agree2(item) {
-				let self=this;
-				confirmedOrderById(item.id).then(res=>{
-					if(res.returnCode=="0"){
-						self.initPage()
-						self.searchInfo()
-					}
-				})
-			},
-			//员工确认支付
-			agree3(item){
-				let self=this;
-				let actualPrice=0;
-				for(let i=0;i<item.orderDetails.length;i++){
-					if(!item.orderDetails[i].actualPrice){
-						this.$api.msg("请先完善订单价格");
-						return false
-					}else{
-						actualPrice+=parseFloat(item.orderDetails[i].actualPrice)
-					}
-				}
-				uni.showModal({
-				    title: '提示',
-				    content: '是兑换成牛币',
-				    success: function (res) {
-				        if (res.confirm) {
-				           let data={
-				           	orderId:item.id,
-							payType:5,
-				           	actualPrice:actualPrice
-				           }
-				           payOrderById(data).then(res=>{
-				           	if(res.returnCode=="0"){
-				           		self.initPage()
-				           		self.searchInfo()
-				           	}else{
-				           		self.$api.msg(res.description);
-				           	}
-				           })
-				        } else if (res.cancel) {
-				           let data={
-				           	orderId:item.id,
-				           	actualPrice:actualPrice
-				           }
-				           payOrderById(data).then(res=>{
-				           	if(res.returnCode=="0"){
-				           		self.initPage()
-				           		self.searchInfo()
-				           	}else{
-				           		self.$api.msg(res.description);
-				           	}
-				           })
-				        }
-				    }
-				});
-				
-				
-			},
-			//删除接口
-			del(item) {
-				let self=this;
-				uni.showModal({
-					title: '删除订单',
-					content: '确定删除订单',
-					success: function (res) {
-						if (res.confirm) {
-							deleteOrderById(item.id).then(res=>{
+							cannelExchangeByChangeId(item.id).then(res=>{
 								if(res.returnCode=="0"){
 									self.initPage()
 									self.searchInfo()
 								}
 							})
-						}else if (res.cancel) {
-							console.log('用户点击确定');
 						}
 					}
 				})
-				
-				
+			},
+		
+			//客户确认收获
+			agree3(item){
+				let self=this;
+				confirmedGoodByChangeId(item.id).then(res=>{
+					if(res.returnCode=="0"){
+						self.initPage()
+						self.searchInfo()
+					}
+				})
 			}
+
 		}
 	}
 </script>
@@ -560,7 +425,7 @@
 					position: absolute;
 					right:20upx;
 					top:30upx;
-					width: 130upx;
+					width: 136upx;
 					background: #F0AD4E;
 					color: #FFFFFF;
 					height: 36upx;

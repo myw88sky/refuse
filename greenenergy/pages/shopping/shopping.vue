@@ -1,188 +1,135 @@
 <template>
-	<view>
+	<view class="content">
 		<view class="shopping">
-			<image src="/static/images/shop-bg.png"></image>
+			<swiper class="swiper"
+				indicator-dots="true" 
+				autoplay="true" 
+				interval="5000" 
+				duration="1500"	>
+				<swiper-item v-for="(item,index) in lunbo" :key="index">
+					<image :src="item.img" mode="aspectFill"></image>
+				</swiper-item>
+			</swiper>
 		</view>
-		<view class="tabs">
-		    <scroll-view id="tab-bar" class="scroll-h" :scroll-x="true" :show-scrollbar="false" :scroll-into-view="scrollInto">
-		        <view v-for="(tab,index) in tabBars" :key="tab.id" class="uni-tab-item" :id="tab.id" :data-current="index" @click="ontabtap">
-		            <text class="uni-tab-item-title" :class="tabIndex==index ? 'uni-tab-item-title-active' : ''">{{tab.name}}</text>
-		        </view>
-		    </scroll-view>
-		    <view class="line-h"></view>
-		    <swiper :current="tabIndex" class="swiper-box" style="flex: 1;" :duration="300" @change="ontabchange">
-		        <swiper-item class="swiper-item" v-for="(tab,index1) in newsList" :key="index1">
-					<scroll-view class="scroll-v list" enableBackToTop="true" scroll-y @scrolltolower="loadMore(index1)">
-						<view v-for="(newsitem,index2) in tab.data" :key="newsitem.id">
-							<media-item :options="newsitem" @close="close(index1,index2)" @click="goDetail(newsitem)"></media-item>
+    <view class="tabs">
+      <scroll-view id="tab-bar" class="scroll-h" :scroll-x="true" :show-scrollbar="false" :scroll-into-view="scrollInto">
+			<view v-for="(tab,index) in tabBars" :key="tab.key" class="uni-tab-item" :id="tab.key" :data-current="index" @click="ontabtap">
+				<text class="uni-tab-item-title" :class="tabIndex==index ? 'uni-tab-item-title-active' : ''">{{tab.resourName}}</text>
+				 <view :class="tabIndex==index ? 'uni-tab-item-text-active' : ''" ></view>
+			</view>
+      </scroll-view>
+        <swiper :current="tabIndex" class="swiper-box" :style="'height: ' + swiperHeight +'rpx;'" :duration="300" @change="ontabchange">
+            <swiper-item class="swiper-item" v-for="(tab,index1) in newsList" :key="index1">
+				<scroll-view class="scroll-v list" enableBackToTop="true" scroll-y @scrolltolower="loadMore(index1)">
+
+					<view v-for="(item,index2) in tab.data" :key="index2">
+						<view class="shop-list">
+							<view class="shop-list-img">
+								<image :src="BASEURL+item.carouselPic1"></image>
+							</view>
+							<view class="shop-list-info">
+								<view class="shop-list-info-title">{{item.name}}</view>
+								<view class="shop-list-info-name">{{item.desc}}</view>
+								<view class="shop-list-info-name">库存剩余{{item.total}}件</view>
+							    <view class="shop-list-info-name" style="text-decoration:line-through;">市场价格:{{item.price}}(元)</view>
+								<!-- <view class="shop-list-info-number">库存剩余{{item.total}}件</view> -->
+								<view class="shop-list-info-points">
+									<view class="shop-list-info-points-num">{{item.score}}（牛币）</view>
+									<view class="shop-list-info-points-btn" @click="goDetail(item)">立即兑换</view>
+								</view>
+							</view>
 						</view>
-						<view class="loading-more" v-if="tab.isLoading || tab.data.length > 4">
-							<text class="loading-more-text">{{tab.loadingText}}</text>
-						</view>
-					</scroll-view>
-			    </swiper-item>
-		    </swiper>
-		</view>
-		
+					</view>
+					<no-message :isShowNodata="isShowNodata"  :list="tab.data" />
+					<view class="loading-more" v-if="tab.isLoading || tab.data.length > 4">
+						<text class="loading-more-text">{{tab.loadingText}}</text>
+					</view>
+				</scroll-view>
+            </swiper-item>
+        </swiper>
+    </view>
 	</view>
-    
 </template>
 <script>
-    import mediaItem from './news-item.nvue';
-
-    // 缓存每页最多
-    const MAX_CACHE_DATA = 100;
-    // 缓存页签数量
-    const MAX_CACHE_PAGE = 3;
-
-    const newsData = {
-        data0: {
-            "datetime": "40分钟前",
-            "article_type": 0,
-            "title": "uni-app行业峰会频频亮相，开发者反响热烈!",
-            "source": "DCloud",
-            "comment_count": 639
-        },
-        data1: {
-            "datetime": "一天前",
-            "article_type": 1,
-            "title": "DCloud完成B2轮融资，uni-app震撼发布!",
-            "image_url": "https://img-cdn-qiniu.dcloud.net.cn/uniapp/images/shuijiao.jpg?imageView2/3/w/200/h/100/q/90",
-            "source": "DCloud",
-            "comment_count": 11395
-        },
-        data2: {
-            "datetime": "一天前",
-            "article_type": 2,
-            "title": "中国技术界小奇迹：HBuilder开发者突破200万",
-            "image_url": "https://img-cdn-qiniu.dcloud.net.cn/uniapp/images/muwu.jpg?imageView2/3/w/200/h/100/q/90",
-            "source": "DCloud",
-            "comment_count": 11395
-        },
-        data3: {
-            "article_type": 3,
-            "image_list": [{
-                "url": "https://img-cdn-qiniu.dcloud.net.cn/uniapp/images/cbd.jpg?imageView2/3/w/200/h/100/q/90",
-                "width": 563,
-                "height": 316
-            }, {
-                "url": "https://img-cdn-qiniu.dcloud.net.cn/uniapp/images/muwu.jpg?imageView2/3/w/200/h/100/q/90",
-                "width": 641,
-                "height": 360
-            }, {
-                "url": "https://img-cdn-qiniu.dcloud.net.cn/uniapp/images/shuijiao.jpg?imageView2/3/w/200/h/100/q/90",
-                "width": 640,
-                "height": 360
-            }],
-            "datetime": "5分钟前",
-            "title": "uni-app 支持使用 npm 安装第三方包，生态更趋丰富",
-            "source": "DCloud",
-            "comment_count": 11
-        },
-        data4: {
-            "datetime": "2小时前",
-            "article_type": 4,
-            "title": "uni-app 支持原生小程序自定义组件，更开放、更自由",
-            "image_url": "https://img-cdn-qiniu.dcloud.net.cn/uniapp/images/cbd.jpg?imageView2/3/w/200/h/100/q/90",
-            "source": "DCloud",
-            "comment_count": 69
-        }
-    };
-
+	import noMessage from '@/components/no-message/no-message.vue'
+	import {getHsGoodTypeZtree,getGoodsInfoByPage} from"@/api/order.js"
+    import { BASEURLImg } from '@/common/utils.js'
     export default {
-        components: {
-            mediaItem
-        },
-        data() {
+		components: {
+			noMessage
+		},
+          data() {
             return {
-                newsList: [],
+				isShowNodata: false,
+				BASEURL: BASEURLImg,
+				lunbo: [{
+					img:"/static/images/shop-bg1.png"
+				},
+				{
+					img:"/static/images/shop-bg2.png"
+				}],
+                newsList: [{data:[]},{data:[]},{data:[]},{data:[]},{data:[]}],
                 cacheTab: [],
                 tabIndex: 0,
-                tabBars: [{
-                    name: '关注',
-                    id: 'guanzhu'
-                }, {
-                    name: '推荐',
-                    id: 'tuijian'
-                }, {
-                    name: '体育',
-                    id: 'tiyu'
-                }, {
-                    name: '热点',
-                    id: 'redian'
-                }, {
-                    name: '财经',
-                    id: 'caijing'
-                }, {
-                    name: '娱乐',
-                    id: 'yule'
-                }, {
-                    name: '军事',
-                    id: 'junshi'
-                }, {
-                    name: '历史',
-                    id: 'lishi'
-                }, {
-                    name: '本地',
-                    id: 'bendi'
-                }],
+               tabBars: [],
                 scrollInto: "",
                 showTips: false,
                 navigateFlag: false,
                 pulling: false,
-                refreshIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAB5QTFRFcHBw3Nzct7e39vb2ycnJioqK7e3tpqam29vb////D8oK7wAAAAp0Uk5T////////////ALLMLM8AAABxSURBVHja7JVBDoAgDASrjqj//7CJBi90iyYeOHTPMwmFZrHjYyyFYYUy1bwUZqtJIYVxhf1a6u0R7iUvWsCcrEtwJHp8MwMdvh2amHduiZD3rpWId9+BgPd7Cc2LIkPyqvlQvKxKBJ//Qwq/CacAAwDUv0a0YuKhzgAAAABJRU5ErkJggg=="
-            }
+                refreshIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAB5QTFRFcHBw3Nzct7e39vb2ycnJioqK7e3tpqam29vb////D8oK7wAAAAp0Uk5T////////////ALLMLM8AAABxSURBVHja7JVBDoAgDASrjqj//7CJBi90iyYeOHTPMwmFZrHjYyyFYYUy1bwUZqtJIYVxhf1a6u0R7iUvWsCcrEtwJHp8MwMdvh2amHduiZD3rpWId9+BgPd7Cc2LIkPyqvlQvKxKBJ//Qwq/CacAAwDUv0a0YuKhzgAAAABJRU5ErkJggg==",
+                swiperHeight:300,
+				userInfo:{}
+			}
         },
-        onLoad() {
-            setTimeout(()=>{
-              this.tabBars.forEach((tabBar) => {
-                  this.newsList.push({
-                      data: [],
-                      isLoading: false,
-                      refreshText: "",
-                      loadingText: '加载更多...'
-                  });
-              });
-              this.getList(0);
-            },350)
-        },
+	    onLoad() {
+	
+       },
+	   onShow() {
+		   this.userInfo=getApp().globalData.userInfo
+		   if(JSON.stringify(this.userInfo)=='{}'){
+		      uni.navigateTo({
+		      	url:"../me/login"
+		      })
+		   }else{
+			 this.getHsGoodTypeZtree()  
+		   }
+	   	
+	   },
         methods: {
-            getList(index) {
-                let activeTab = this.newsList[index];
-                let list = [];
-                for (let i = 1; i <= 10; i++) {
-                    let item = Object.assign({}, newsData['data' + Math.floor(Math.random() * 5)]);
-                    item.id = this.newGuid();
-                    list.push(item);
-                }
-                activeTab.data = activeTab.data.concat(list);
-            },
-            goDetail(e) {
-                if (this.navigateFlag) {
-                    return;
-                }
-                this.navigateFlag = true;
-                uni.navigateTo({
-                    url: './detail/detail?title=' + e.title
-                });
-                setTimeout(() => {
-                    this.navigateFlag = false;
-                }, 200)
-            },
-            close(index1, index2) {
-                uni.showModal({
-                    content: '是否删除本条信息？',
-                    success: (res) => {
-                        if (res.confirm) {
-                            this.newsList[index1].data.splice(index2, 1);
-                        }
-                    }
-                })
+			getHsGoodTypeZtree(){
+				getHsGoodTypeZtree().then(res=>{
+					this.tabBars=res.filter(function(item){
+						return item.type===1
+					})
+					this.getGoodsInfoByPage(0);
+				})
+			},
+			getGoodsInfoByPage(index){
+				this.isShowNodata = false;
+				const id=this.tabBars[index].id
+				let data={
+					id:id,
+					page:0,
+					rows:100
+				}
+				this.newsList[index].data=[]
+				getGoodsInfoByPage(data).then(res=>{
+					this.isShowNodata = true;
+					let activeTab = this.newsList[index];
+					activeTab.data = activeTab.data.concat(res.rows);
+					this.swiperHeight=activeTab.data.length>0?350*activeTab.data.length:600
+				})
+			},
+            goDetail(item) {
+               let id=item.id
+			   uni.navigateTo({
+				   url: './shopping-info?id='+id
+			   });
             },
             loadMore(e) {
-                setTimeout(() => {
+                /* setTimeout(() => {
                     this.getList(this.tabIndex);
-                }, 500)
+                }, 500) */
             },
             ontabtap(e) {
                 let index = e.target.dataset.current || e.currentTarget.dataset.current;
@@ -190,36 +137,33 @@
             },
             ontabchange(e) {
                 let index = e.target.current || e.detail.current;
-                this.switchTab(index);
+               // this.switchTab(index);
             },
             switchTab(index) {
-                if (this.newsList[index].data.length === 0) {
-                    this.getList(index);
-                }
-
+               this.getGoodsInfoByPage(index);
                 if (this.tabIndex === index) {
                     return;
                 }
 
                 // 缓存 tabId
-                if (this.newsList[this.tabIndex].data.length > MAX_CACHE_DATA) {
-                    let isExist = this.cacheTab.indexOf(this.tabIndex);
-                    if (isExist < 0) {
-                        this.cacheTab.push(this.tabIndex);
-                        //console.log("cache index:: " + this.tabIndex);
-                    }
-                }
+                // if (this.newsList[this.tabIndex].data.length > MAX_CACHE_DATA) {
+                //     let isExist = this.cacheTab.indexOf(this.tabIndex);
+                //     if (isExist < 0) {
+                //         this.cacheTab.push(this.tabIndex);
+                       
+                //     }
+                // }
 
                 this.tabIndex = index;
-                this.scrollInto = this.tabBars[index].id;
+                //this.scrollInto = this.tabBars[index].id;
 
                 // 释放 tabId
-                if (this.cacheTab.length > MAX_CACHE_PAGE) {
-                    let cacheIndex = this.cacheTab[0];
-                    this.clearTabData(cacheIndex);
-                    this.cacheTab.splice(0, 1);
-                    //console.log("remove cache index:: " + cacheIndex);
-                }
+                // if (this.cacheTab.length > MAX_CACHE_PAGE) {
+                //     let cacheIndex = this.cacheTab[0];
+                //     this.clearTabData(cacheIndex);
+                //     this.cacheTab.splice(0, 1);
+                   
+                // }
             },
             clearTabData(e) {
                 this.newsList[e].data.length = 0;
@@ -257,45 +201,51 @@
                     tab.refreshFlag = false;
                     tab.refreshText = "下拉可以刷新";
                 }
-            },
-            newGuid() {
-                let s4 = function() {
-                    return (65536 * (1 + Math.random()) | 0).toString(16).substring(1);
-                }
-                return (s4() + s4() + "-" + s4() + "-4" + s4().substr(0, 3) + "-" + s4() + "-" + s4() + s4() + s4()).toUpperCase();
             }
         }
     }
 </script>
 
 <style>
-    page {
+ page {
         width: 100%;
         min-height: 100%;
         display: flex;
     }
+	.content{
+		 background-color: #f5f5f5;
+		 height: auto;
+	}
    .shopping{
-	   width: 100%;
-	   height: 360upx;
+	   width: calc(100% - 60upx);
+	   margin: 30upx 30upx 0;
    }
-   .shopping image{
-	   width: 100%;
-	   height: 100%;
-   }
+ 
+	 .swiper{
+		height: 300upx;
+		width: 100%;
+	 }
+	 swiper-item image{
+		width: 100%;
+		height: 300upx;
+		border-radius: 20upx;
+	 }
     .tabs {
         flex: 1;
         flex-direction: column;
         overflow: hidden;
         background-color: #ffffff;
+		height: 100vh;
     }
 
     .scroll-h {
         width: 750rpx;
-        height: 80rpx;
+      /*  height: 80rpx; */
         flex-direction: row;
         white-space: nowrap;
+		background: #FAFAFA;
         /* flex-wrap: nowrap; */
-        /* border-color: #cccccc;
+     /*   border-color: #cccccc;
 		border-bottom-style: solid;
 		border-bottom-width: 1px; */
     }
@@ -308,12 +258,12 @@
     .uni-tab-item {
         display: inline-block;
         flex-wrap: nowrap;
-        padding-left: 34rpx;
-        padding-right: 34rpx;
+        padding-left: 28rpx;
+        padding-right: 28rpx;
     }
 
     .uni-tab-item-title {
-        color: #555;
+        color: #000;
         font-size: 30rpx;
         height: 80rpx;
         line-height: 80rpx;
@@ -321,8 +271,13 @@
     }
 
     .uni-tab-item-title-active {
-        color: #007AFF;
+        color: #4667F0;
     }
+	.uni-tab-item-text-active{
+		height: 6rpx;
+		width: 100%;
+		background: #4667F0;
+	}
 
     .swiper-box {
         flex: 1;
@@ -334,10 +289,9 @@
     }
 
     .scroll-v {
-        flex: 1;
-       
-        flex-direction: column;
-        width: 750rpx;
+     flex: 1;
+     flex-direction: column;
+     width: 750rpx;
     }
 
     .update-tips {
@@ -409,4 +363,64 @@
         font-size: 28rpx;
         color: #999;
     }
+	.shop-list{
+		display: flex;
+		padding: 30upx;
+		height: auto;
+	}
+	.shop-list-img{
+		width: 230upx;
+		height: 230upx;
+	}
+	.shop-list-img image{
+		width: 100%;
+		height: 100%;
+	}
+	.shop-list-info{
+		padding-left: 30upx;
+	}
+	.shop-list-info-title{
+		font-weight: 600;
+		font-size: 32upx;
+		color: #000000;
+		width: 434upx;
+		text-overflow:ellipsis;
+		white-space:nowrap;
+		overflow:hidden;
+	}
+	.shop-list-info-name{
+		margin-top: 8upx;
+		font-weight: 400;
+		font-size: 32upx;
+		color: #868686;
+	}
+	.shop-list-info-number{
+		margin-top: 10upx;
+		background: #4667F0;
+		color: #FFFFFF;
+		padding:5upx 20upx;
+		width: 300upx;
+		text-align: center;
+		border-radius:20upx ;
+	}
+	.shop-list-info-points{
+		margin-top: 10upx;
+		display: flex;
+		justify-content:space-between;
+	}
+	.shop-list-info-points-num{
+		font-size: 34upx;
+		font-weight: 600;
+		color: #4667F0;
+		height: 50upx;
+		line-height: 80upx;
+	}
+	.shop-list-info-points-btn{
+		background: #4667F0;
+		color: #FFFFFF;
+		padding:10upx 20upx;
+		width: 136upx;
+		text-align: center;
+		border-radius:20upx ;
+	}
 </style>

@@ -10,6 +10,23 @@
 		     <view>{{nickName}}</view>
 		</view>
 		<view style="height: 20upx;"></view>
+		<view class="mine">
+			<view class="mine-item">
+				<image src="/static/images/mine_rec.png"></image>
+				<view class="mine-item-title">回收物品</view>
+				<view class="mine-item-number">0<span style="font-size: 22upx;margin-left: 6upx;">千克</span></view>
+			</view>
+			<view class="mine-item">
+				<image src="/static/images/mine_open.png"></image>
+				<view class="mine-item-title">减少碳排放</view>
+				<view class="mine-item-number">0<span style="font-size: 22upx;margin-left: 6upx;">千克</span></view>
+			</view>
+			<view class="mine-item">
+				<image src="/static/images/mine_pro.png"></image>
+				<view class="mine-item-title">保护树木</view>
+				<view class="mine-item-number">0<span style="font-size: 22upx;margin-left: 6upx;">棵</span></view>
+			</view>
+		</view>
 		<view class="subscribe">
 			<view class="subscribe-view" style="margin-top: 20upx" @click="changePage('order/order')">
 			  <view class="subscribe-view-left"> 订单管理 </view>
@@ -24,6 +41,11 @@
 			<view class="subscribe-view" style="margin-top: 20upx">
 			  <view class="subscribe-view-left"> 积分商城 </view>
 			  <view class="subscribe-view-right isselect" @click="changePage('shopping/shopping')">
+			  </view>
+			</view>
+			<view class="subscribe-view" style="margin-top: 20upx">
+			  <view class="subscribe-view-left"> 商城订单 </view>
+			  <view class="subscribe-view-right isselect" @click="gotoPage('shopping/order')">
 			  </view>
 			</view>
 		</view>
@@ -67,7 +89,7 @@
 					}	
 				}
 				uni.navigateTo({
-					url:"../"+e
+					url:"/pages/"+e
 				})
 			},
 			changePage(e){
@@ -120,8 +142,33 @@
 		text-align: center;
 	}
 	.weiLogo image{
-		width: 180upx;
-		height: 180upx;
+		width: 160upx;
+		height: 160upx;
+	}
+	.mine{
+		display: flex;
+		justify-content:center;
+		align-items: center;
+		background: #FFFFFF;
+		text-align: center;
+		padding: 20upx;
+	}
+	.mine-item{
+		flex: 1;
+	}
+	.mine-item image{
+		width: 100upx;
+		height: 100upx;
+	}
+	.mine-item-title{
+		color: #9C9C9A;
+		font-size: 30upx;
+		padding: 10upx 0;
+	}
+	.mine-item-number{
+		color: #31b977;
+		font-size: 36upx;
+		font-weight: 500;
 	}
 	.subscribe{
 		background-color: #FFFFFF;

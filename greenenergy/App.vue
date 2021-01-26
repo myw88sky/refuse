@@ -2,7 +2,7 @@
 	import {fakeLogin,getWeiOpenId} from"@/api/index.js"
 	export default {
 		onLaunch: function() {
-			console.log('App Launch')
+
 			let self=this;
 			// 1.wx获取登录用户code
 			uni.login({
@@ -14,7 +14,6 @@
 								uni.getUserInfo({
 									provider: 'weixin',
 									success: function(infoRes) {
-										console.log("333",infoRes);
 										getApp().globalData.wUserInfo = infoRes.userInfo;
 										uni.setStorageSync("WeiUser",true)
 										//登录
@@ -63,14 +62,14 @@
 			userInfo:{}
 		},
 		onShow: function() {
-			console.log('App Show')
+
 		},
 		onHide: function() {
-			console.log('App Hide')
+
 		}
 	}
 </script>
 
 <style>
-	/*每个页面公共css */
+
 </style>

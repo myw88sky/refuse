@@ -165,7 +165,7 @@
 		</view>
 	    <view class="submit">
 			<view class="submit-explain" @click="openExplain()">
-				确认下单将自动默认<span style="color: #31b977;">《巨能上门回收免费条款》</span>
+				确认下单将自动默认<span style="color: #31b977;">《小牛换吧上门回收免费条款》</span>
 			</view>
 			<view class="submit-btn">
 				<button type="primary" style="width: 40%;" @click="addHsOrder('1')">公益赠送</button>
@@ -227,7 +227,15 @@
 		},
 		
 		onLoad(e){
+			let userInfo=getApp().globalData.userInfo
+			if(JSON.stringify(userInfo)=='{}'){
+			   uni.navigateTo({
+			   	url:"../me/login"
+			   })
+			}
 			this.type=e.type
+			this.getHsTypeList()
+			this.myUserAddress()
 		},
 		onShow(){
 			let userInfo=getApp().globalData.userInfo
@@ -236,8 +244,7 @@
 			   	url:"../me/login"
 			   })
 			}
-		    this.getHsTypeList()
-			this.myUserAddress()
+		
 		},
 		methods: {
 			addGoods(){

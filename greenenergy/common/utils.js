@@ -1,6 +1,7 @@
 //现网正式环境
-//const BASEURL = "http://www.mazsn.cn:80/mazsnexample/"
-  const BASEURL = "http://121.4.58.57:8080/mazsnexample"
+const BASEURL = "https://www.mazsn.cn/mazsnexample"
+const BASEURLImg = "http://www.mazsn.cn"
+//const BASEURL = "http://121.4.58.57:8080/mazsnexample"
 /**
  * 时间戳返回 时:分:秒 \
  * */
@@ -123,4 +124,5 @@ module.exports = {
   dateUtils: dateUtils,
   transStr: transStr,
   BASEURL: BASEURL,
+  BASEURLImg:BASEURLImg
 }

@@ -224,7 +224,7 @@ export function updateOrderDetail(data) {
   * */
 export function payOrderById(data) {
   return request({
-    url: '/hsOrderInf/payOrderById?orderId='+data.orderId+'&actualPrice='+data.actualPrice,
+    url: '/hsOrderInf/payOrderById?orderId='+data.orderId+'&actualPrice='+data.actualPrice+'&payType='+data.payType,
     method: 'get',
     data
   })

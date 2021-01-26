@@ -70,15 +70,39 @@
             }
             
         }
-        ,{
+		,{
             "path" : "pages/me/login",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
                 "enablePullDownRefresh": false
             }
+        }
+        ,{
+            "path" : "pages/shopping/shopping-info",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "商品详情",
+                "enablePullDownRefresh": false
+            }
             
         }
+        ,{
+            "path" : "pages/shopping/shopping-order",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "订单详情",
+                "enablePullDownRefresh": false
+            }
+        },
+		{
+		    "path" : "pages/shopping/order",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "商城订单",
+		        "enablePullDownRefresh": false
+		    }
+		}
     ],
 	"tabBar": {
 	    "color": "#C6C6C6",
@@ -98,12 +122,12 @@
 	        "iconPath": "/static/images/tabBar_icon02.png",
 	        "selectedIconPath": "/static/images/tabBar_icon02_active.png"
 	      },
-		  /* {
+		  {
 		    "text": "商城",
 		    "pagePath": "pages/shopping/shopping",
 		    "iconPath": "/static/images/tabBar_icon04.png",
 		    "selectedIconPath": "/static/images/tabBar_icon04_active.png"
-		  }, */
+		  },
 	      {
 	        "text": "我的",
 	        "pagePath": "pages/me/me",

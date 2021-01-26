@@ -45,7 +45,7 @@
 		 <view class="phone">
 			 <view class="phone-item" style="margin-left: 30upx;" >服务热线</view>
 			 <view class="phone-item" style="margin-right: 30upx;display: flex;color: #31b977;" @click="openPhone()">
-				 <uni-icons type="phone-filled" color="#31b977" size="24"></uni-icons>
+				 <uni-icons type="phone-filled" color="#31b977" size="16"></uni-icons>
 			     <view>18255157968</view>
 			 </view>
 		 </view>
@@ -112,7 +112,7 @@
 			}
 		},
 		onLoad() {
-			console.log("333")
+		
           /* this.getWeiUser=uni.getStorageSync("WeiUser")
 		  if(this.getWeiUser){
 			  this.login()
@@ -156,11 +156,9 @@
 				})
 			},
 			changePage(){
-				this.$api.msg("开发中...")
-				return false;
-				/* uni.switchTab({
+				uni.switchTab({
 					url:"../shopping/shopping"
-				}) */
+				})
 			},
 			openPhone(){
 				uni.makePhoneCall({
@@ -257,7 +255,7 @@
 		justify-content:space-between;
 	}
     .phone-item{
-		font-size: 40upx;
+		font-size: 32upx;
 		color: #222222;
 	}
 	.other{
