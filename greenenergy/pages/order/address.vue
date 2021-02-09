@@ -189,7 +189,7 @@ page{
 	align-items: center;
 	justify-content: space-between;
 	color: #222222;
-	font-size: 36upx;
+	font-size: 28upx;
 	font-weight: 600;
 }
 .address-default{
@@ -204,7 +204,7 @@ page{
 	margin-top: 40upx;
 	margin-bottom: 20upx;
 	color: #9B9B9B;
-	font-size: 32upx;
+	font-size: 28upx;
 	font-weight: 500;
 }
 .address-menu{
@@ -216,7 +216,7 @@ page{
 	flex:1;
 	text-align: center;
 	color: #B2B2B2;
-	font-size: 36upx;
+	font-size: 28upx;
 }
 .placeholder-view{
 	width: 100%;

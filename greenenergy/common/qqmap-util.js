@@ -47,6 +47,29 @@ export function reverseGeocoder (location) {
 }
 
 /**
+ * 地址解析成坐标
+   * */
+   export function geocoder(address) {
+     return new Promise((resolve, reject) => {
+       qqmapsdk.geocoder({
+         address: address,
+         success: res => {
+           resolve(res)
+         },
+         fail: err => {
+           reject(err)
+           uni.showToast({
+             title: err.message,
+             icon: 'none',
+             duration: 3000
+           })
+         }
+       })
+     })
+   }
+
+
+/**
  * 地图关键词搜索
  * @doc 文档参考：https://lbs.qq.com/qqmap_wx_jssdk/method-search.html
  * @export

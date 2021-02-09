@@ -114,8 +114,8 @@
 	 margin: 30upx;
  }
 .content-info-title{
-	font-weight: 600;
-	font-size: 32upx;
+	font-weight: 550;
+	font-size: 28upx;
 	color: #000000;
 	width: 100%;
 }
@@ -131,8 +131,8 @@
 	color: #8C8C8C;
 }
 .content-info-main-points{
-	font-size: 34upx;
-	font-weight: 600;
+	font-size: 28upx;
+	font-weight: 550;
 	color: #4667F0;
 	height: 50upx;
 	line-height: 80upx;
@@ -147,8 +147,8 @@
 }
 .shopping-info-name{
 	color: #000000;
-	font-size: 34upx;
-	font-weight: 600;
+	font-size: 28upx;
+	font-weight: 550;
 	text-align: center;
 }
 .shopping-info-img{
@@ -176,8 +176,8 @@
 }
 	
 .shopping-order-total{
-	font-size: 34upx;
-	font-weight: 600;
+	font-size: 28upx;
+	font-weight: 550;
 	color: #222222;
 	height: 50upx;
 	line-height: 80upx;

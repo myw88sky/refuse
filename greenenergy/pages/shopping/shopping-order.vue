@@ -7,8 +7,8 @@
 				  </view> 
 			  </view>
 			  <view class="address-view-right isselect"  style="height: 180upx;flex:4; display: flex;align-items: center;vertical-align: center; "  @click="selectAddress()">
-				  <view style="line-height: normal;font-size: 36upx;font-weight: 600;color: #000000;" v-if="locationAddress!=''" >{{locationAddress}}</view>
-				  <view style="line-height: normal;font-size: 36upx;font-weight: 600;color: #000000;" v-else>{{addressMark}}</view>
+				  <view style="line-height: normal;font-size: 28upx;font-weight: 500;color: #000000;" v-if="locationAddress!=''" >{{locationAddress}}</view>
+				  <view style="line-height: normal;font-size: 28upx;font-weight: 500;color: #000000;" v-else>{{addressMark}}</view>
 			  </view>
 		</view>
 		<view class="shop-list">
@@ -31,7 +31,7 @@
 			  </view>
 			  <view class="address-view-right"  style="height: 180upx;display: flex;align-items: center;vertical-align: center; "  >
 				 <view style="flex: 3;"></view>
-				  <view style="font-size: 36upx;font-weight: 600;color: #007AFF;">≈{{totalScore}}</view>
+				  <view style="font-size: 28upx;font-weight: 500;color: #007AFF;">≈{{totalScore}}</view>
 			  </view>
 		</view>
 		<view class="address-view"  style="height: 180upx;background: #FFFFFF;" >
@@ -42,11 +42,11 @@
 				  <textarea style="width: 100%;" v-model="textVal" auto-height />
 			  </view>
 		</view>
-		<view style="padding: 30upx;font-size: 36upx;font-weight: 500;color: #7E7E7E;background:#F6F6F6 ;
+		<view style="padding: 30upx;font-size: 28upx;font-weight: 500;color: #7E7E7E;background:#F6F6F6 ;
 ">支付方式</view>
 		<view class="address-view"  style="height: 180upx;background: #FFFFFF;" >
 			  <view class="address-view-left"  style="height: 180upx;line-height: 180upx;flex: 2;">  
-				 可用牛币：{{userInfo.remainScore}}
+				 可用牛币：{{userInfo.remainScore?userInfo.remainScore:0}}
 			  </view>
 			  <view class="address-view-right"  style="height: 180upx;display: flex;align-items: center;vertical-align: center; "  >
 				 <view style="flex: 2;"></view>
@@ -147,6 +147,8 @@
 								url:"/pages/shopping/shopping"
 							})	
 						},1500)
+					}else{
+						this.$api.msg(res.description)
 					}
 				})
 			}
@@ -180,8 +182,8 @@ page{
 	  }
 	  &-left {
 	    line-height: 100upx;
-	    font-size: 36upx;
-	    font-weight: 600;
+	    font-size: 28upx;
+	    font-weight: 500;
 	    
 		flex:1;
 	
@@ -204,7 +206,7 @@ page{
 	    line-height: 100upx;
 	    position: relative;
 	    padding-right: 20upx;
-	    font-size: 32upx;
+	    font-size: 28upx;
 		color: #BABABA;
 		flex:2;
 	
@@ -249,8 +251,8 @@ page{
 }
 	
 .shopping-order-total{
-	font-size: 34upx;
-	font-weight: 600;
+	font-size: 28upx;
+	font-weight: 550;
 	color: #222222;
 	height: 50upx;
 	line-height: 80upx;
@@ -282,8 +284,8 @@ page{
 		padding-left: 30upx;
 	}
 	.shop-list-info-title{
-		font-weight: 600;
-		font-size: 32upx;
+		font-weight: 500;
+		font-size: 28upx;
 		color: #000000;
 		width: 434upx;
 		text-overflow:ellipsis;
@@ -293,7 +295,7 @@ page{
 	.shop-list-info-name{
 		margin-top: 20upx;
 		font-weight: 400;
-		font-size: 32upx;
+		font-size: 28upx;
 		color: #868686;
 	}
 	.shop-list-info-number{
@@ -311,8 +313,8 @@ page{
 		justify-content:space-between;
 	}
 	.shop-list-info-points-num{
-		font-size: 34upx;
-		font-weight: 600;
+		font-size: 28upx;
+		font-weight: 550;
 		color: #4667F0;
 		height: 50upx;
 		line-height: 80upx;

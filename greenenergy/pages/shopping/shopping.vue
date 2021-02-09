@@ -93,7 +93,7 @@
 		   }else{
 			 this.getHsGoodTypeZtree()  
 		   }
-	   	
+   	
 	   },
         methods: {
 			getHsGoodTypeZtree(){
@@ -264,7 +264,7 @@
 
     .uni-tab-item-title {
         color: #000;
-        font-size: 30rpx;
+        font-size: 28rpx;
         height: 80rpx;
         line-height: 80rpx;
         flex-wrap: nowrap;
@@ -380,8 +380,8 @@
 		padding-left: 30upx;
 	}
 	.shop-list-info-title{
-		font-weight: 600;
-		font-size: 32upx;
+		font-weight: 500;
+		font-size: 28upx;
 		color: #000000;
 		width: 434upx;
 		text-overflow:ellipsis;
@@ -391,7 +391,7 @@
 	.shop-list-info-name{
 		margin-top: 8upx;
 		font-weight: 400;
-		font-size: 32upx;
+		font-size: 28upx;
 		color: #868686;
 	}
 	.shop-list-info-number{
@@ -409,8 +409,8 @@
 		justify-content:space-between;
 	}
 	.shop-list-info-points-num{
-		font-size: 34upx;
-		font-weight: 600;
+		font-size: 28upx;
+		font-weight: 550;
 		color: #4667F0;
 		height: 50upx;
 		line-height: 80upx;

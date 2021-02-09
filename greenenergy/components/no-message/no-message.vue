@@ -2,7 +2,7 @@
 	<view v-if="computerIsShow" class="no-data">
 		<image src="/static/images/nodata.png" />
 		<view class="no-data-title">
-			暂无消息
+			暂无数据
 		</view>
 	</view>
 </template>

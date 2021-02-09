@@ -103,6 +103,33 @@
 		        "enablePullDownRefresh": false
 		    }
 		}
+        ,{
+            "path" : "pages/me/recordList",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "牛币记录",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/me/rankList",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "牛币排行榜",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/me/myAddress",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "门面地址",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"tabBar": {
 	    "color": "#C6C6C6",

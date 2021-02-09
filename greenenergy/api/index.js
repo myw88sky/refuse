@@ -141,8 +141,9 @@ export function addHsOrder(data) {
  * 订单列表
    * */
 export function getHsOrderList(data) {
+	let url=data.createUserId?'/hsOrderInf/getHsOrderList?createUserId='+data.createUserId:'/hsOrderInf/getHsOrderList'
   return request({
-    url: '/hsOrderInf/getHsOrderList',
+    url: url,
     method: 'post',
     data
   })
@@ -152,8 +153,9 @@ export function getHsOrderList(data) {
  * 完成订单
    * */
 export function getHsOrderListFinish(data) {
+	let url=data.createUserId?'/hsOrderInf/getHsOrderList?status=5&createUserId='+data.createUserId:'/hsOrderInf/getHsOrderList?status=5'
   return request({
-    url: '/hsOrderInf/getHsOrderList?status=5',
+    url: url,
     method: 'post',
     data
   })
@@ -240,6 +242,59 @@ export function confiremedPaidOrderById(data) {
     data
   })
 }
+
+/**
+ * 获取我的牛币记录
+   * */
+export function getMyPerList(data) {
+  return request({
+    url: '/myInfo/getMyPerList',
+    method: 'get',
+    data
+  })
+}
+
+
+/**
+ * 获取牛币排行榜
+   * */
+export function getUserByRemainScoreLimit(data) {
+  return request({
+    url: '/myInfo/getUserByRemainScoreLimit',
+    method: 'get',
+    data
+  })
+}
+
+/**
+ * 获取首页统计数据
+   * */
+export function getIndexTotal(data) {
+  return request({
+    url: '/myInfo/getIndexTotal',
+    method: 'get',
+    data
+  })
+}
+
+/**
+ * 我的页面统计接口
+   * */
+export function getMyPageTotal(data) {
+  return request({
+    url: '/myInfo/getMyPageTotal',
+    method: 'get',
+    data
+  })
+}
+
+
+
+
+
+
+
+
 
 
 

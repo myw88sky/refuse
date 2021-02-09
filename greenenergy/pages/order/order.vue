@@ -56,7 +56,7 @@
 							</view>
 						</view>
 						<view class="message-card-right-title">
-							<view class="message-card-right-title-left" style="font-weight: 550;">
+							<view class="message-card-right-title-left" style="font-size: 30upx;font-weight: 550;">
 								预约物品
 							</view>
 							<view class="message-card-right-title-right" >
@@ -138,7 +138,7 @@
 							</view>
 						</view>
 						<view class="message-card-right-title">
-							<view class="message-card-right-title-left" style="font-weight: 700;">
+							<view class="message-card-right-title-left" style="font-size: 30upx;font-weight: 550;">
 								预约物品
 							</view>
 							<view class="message-card-right-title-right" >
@@ -185,6 +185,7 @@
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue'
 	import neilModal from '@/components/neil-modal/neil-modal.vue';
 	import {getHsOrderList,getHsOrderListFinish,deleteOrderById,recoveredOrderById,updateOrderDetail,confiremedPaidOrderById,confirmedOrderById,payOrderById} from"@/api/index.js"
+	import{transformScore}from"@/api/order.js"
 	export default {
 	    components: {
 			iTabs,
@@ -248,9 +249,9 @@
 		methods: {
 			getState(state){
 				switch(state){
-					case 1: return "待回收";
+					case 1: return "待确认";
 					break;
-					case 2: return "待确认";
+					case 2: return "待回收";
 					break;
 					case 3: return "待支付";
 					break;
@@ -278,21 +279,21 @@
 					uni.showLoading();
 					let data=this.userType=="3"?{
 						page:0,
-						row:10,
+						row:100,
 						queryConditions:[{
-						  queryConditions:"",//查询字段名,处理人
-						  operation:"",//比较符
-						  queryValue:"" //比较值
+						   "queryField":"",//查询字段名,处理人
+						     "operation":"",//比较符
+						     "queryValue":"" //比较值
 						}],
 					}:{
 						page:0,
-						row:10,
+						row:100,
 						queryConditions:[{
-						  queryConditions:"",//查询字段名,处理人
-						  operation:"",//比较符
-						  queryValue:"" //比较值
+						 "queryField":"hs_order.create_user_id",//查询字段名,处理人
+						   "operation":"=",//比较符
+						   "queryValue":this.userInfo.id //比较值
 						}],
-						createuserid:this.userInfo.id 
+						createUserId:this.userInfo.id 
 					}
 					
 					getHsOrderList(data).then(res => {
@@ -310,21 +311,21 @@
 					uni.showLoading();
 					let data=this.userType=="3"?{
 						page:0,
-						row:10,
+						row:100,
 						queryConditions:[{
-						  queryConditions:"",//查询字段名,处理人
-						  operation:"",//比较符
-						  queryValue:"" //比较值
+						 "queryField":"",//查询字段名,处理人
+						   "operation":"",//比较符
+						   "queryValue":""//比较值
 						}],
 					}:{
 						page:0,
-						row:10,
+						row:100,
 						queryConditions:[{
-						  queryConditions:"",//查询字段名,处理人
-						  operation:"",//比较符
-						  queryValue:"" //比较值
+						"queryField":"hs_order.create_user_id",//查询字段名,处理人
+						  "operation":"=",//比较符
+						  "queryValue":this.userInfo.id //比较值
 						}],
-						createuserid:this.userInfo.id 
+						createUserId:this.userInfo.id 
 					}
 					getHsOrderListFinish(data).then(res => {
 						this.isShowNodata = true
@@ -400,7 +401,7 @@
 			reback(){
 				uni.showModal({
 					title: '撤回订单',
-					    content: '请联系18255157968后台管理人员帮你撤回',
+					    content: '请联系17733360808后台管理人员帮你撤回',
 						showCancel:false,
 					    success: function (res) {
 						if (res.confirm) {
@@ -451,40 +452,46 @@
 						actualPrice+=parseFloat(item.orderDetails[i].actualPrice)
 					}
 				}
-				uni.showModal({
-				    title: '提示',
-				    content: '是兑换成牛币',
-				    success: function (res) {
-				        if (res.confirm) {
-				           let data={
-				           	orderId:item.id,
-							payType:5,
-				           	actualPrice:actualPrice
-				           }
-				           payOrderById(data).then(res=>{
-				           	if(res.returnCode=="0"){
-				           		self.initPage()
-				           		self.searchInfo()
-				           	}else{
-				           		self.$api.msg(res.description);
-				           	}
-				           })
-				        } else if (res.cancel) {
-				           let data={
-				           	orderId:item.id,
-				           	actualPrice:actualPrice
-				           }
-				           payOrderById(data).then(res=>{
-				           	if(res.returnCode=="0"){
-				           		self.initPage()
-				           		self.searchInfo()
-				           	}else{
-				           		self.$api.msg(res.description);
-				           	}
-				           })
-				        }
-				    }
-				});
+				
+				transformScore(actualPrice).then(result=>{
+						if(result.returnCode=="0"){
+							uni.showModal({
+							    title: '提示',
+							    content: '是否将'+actualPrice+'现金元转成'+result.result+'个牛币？',
+							    success: function (res) {
+							        if (res.confirm) {
+							           let data={
+							           	orderId:item.id,
+										payType:5,
+							           	actualPrice:actualPrice
+							           }
+							           payOrderById(data).then(res=>{
+							           	if(res.returnCode=="0"){
+							           		self.initPage()
+							           		self.searchInfo()
+							           	}else{
+							           		self.$api.msg(res.description);
+							           	}
+							           })
+							        } else if (res.cancel) {
+							           let data={
+							           	orderId:item.id,
+										payType:1,
+							           	actualPrice:actualPrice
+							           }
+							           payOrderById(data).then(res=>{
+							           	if(res.returnCode=="0"){
+							           		self.initPage()
+							           		self.searchInfo()
+							           	}else{
+							           		self.$api.msg(res.description);
+							           	}
+							           })
+							        }
+							    }
+							})
+						}
+				})
 				
 				
 			},
@@ -529,9 +536,9 @@
 
 				&-span {
 					height: 70upx;
-					font-size: 50upx;
+					font-size: 28upx;
 					font-family: PingFangSC-Medium, PingFang SC;
-					font-weight: 600;
+					font-weight: 500;
 					color: rgba(34, 34, 34, 1);
 					line-height: 70upx;
 				}
@@ -573,7 +580,7 @@
 				&-left {
 					width: 70upx;
 					height: 70upx;
-					font-size: 32upx;
+					font-size: 28upx;
 					display: inline-block;
 					text-align: center;
 					line-height: 70upx;
@@ -588,7 +595,7 @@
 					padding: 22upx 22upx;
 					border: 2upx solid #E3E7EB;
 					border-radius: 12upx;
-					margin-left: 20upx;
+					/* margin-left: 20upx; */
 					&-arrow {
 						position: absolute;
 						width: 18upx;
@@ -600,7 +607,7 @@
 						
 					}
 					&-content {
-						font-size: 30upx;
+						font-size: 28upx;
 						font-family: PingFangSC-Regular, PingFang SC;
 						font-weight: 400;
 						color: rgba(34, 34, 34, 1);
@@ -617,7 +624,7 @@
 						display: flex;
 						position: relative;
 						margin-top: 20upx;
-						font-size: 32upx;
+						font-size: 28upx;
 						font-weight: 400;
 						color: rgba(34, 34, 34, 1);
 						line-height: 60upx;
@@ -684,7 +691,7 @@
 						align-items: center;
 
 						&-left {
-							font-size: 34upx;
+							font-size: 28upx;
 							font-weight: 400;
 							color: #222222;
 							flex: 1;
@@ -695,7 +702,7 @@
 						}
 
 						&-right {
-							font-size: 32upx;
+							font-size: 28upx;
 							font-weight: 400;
 							color: rgba(153, 153, 153, 1);
 						}

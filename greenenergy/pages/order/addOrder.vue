@@ -214,6 +214,7 @@
 				},
 				attachmentList: [],
 				uploadFileUrl: BASEURL+'/hsOrderInf/uploadOrderImg', //替换成你的后端接收文件地址
+				//uploadFileUrl: BASEURL+'/goodsInfo/uploadResource', //替换成你的后端接收文件地址
 			    type:"1", 
 				weight:"1",
 				ztreeList:[],
@@ -497,8 +498,8 @@
 	width: calc(100% -60upx);
  }
  .hspl-title{
-	 font-size: 36upx;
-	 font-weight: 600;
+	 font-size: 28upx;
+	 font-weight: 500;
 	 color: #222222;
  }
  .hspl-content{
@@ -526,8 +527,8 @@
 	background-color: #FFFFFF;
  }
  .jrzdj-title{
-	 font-size: 36upx;
-	 font-weight: 600;
+	 font-size: 28upx;
+	 font-weight: 500;
 	 color: #222222;
  }
  .jrzdj-content{
@@ -546,19 +547,19 @@
 	 justify-content:space-between;
  }
  .jrzdj-content-item-name{
-	 font-size: 40upx;
-	 font-weight: 600;
+	 font-size: 28upx;
+	 font-weight: 500;
 	 color: #222222;
  }
  .jrzdj-content-item-mark{
 	 margin-top: 20upx;
- 	 font-size: 34upx;
- 	 font-weight: 600;
+ 	 font-size: 28upx;
+ 	 font-weight: 500;
  	 color: #A5A5A5;
  }
  .jrzdj-content-item-price{
-	 font-size: 40upx;
-	 font-weight: 600;
+	 font-size: 28upx;
+	 font-weight: 550;
 	 color: #31b977;
  }
  .hsyq{
@@ -567,8 +568,8 @@
 	 background-color: #FFFFFF;
  }
  .hsyq-title{
- 	 font-size: 36upx;
- 	 font-weight: 600;
+ 	 font-size: 28upx;
+ 	 font-weight: 500;
  	 color: #222222;
  }
  .hsyq-content{
@@ -586,8 +587,8 @@
 	 height: 130upx;
  }
  .hsyq-content-item-remark{
-	 font-size: 34upx;
-	 font-weight: 600;
+	 font-size: 28upx;
+	 font-weight: 500;
 	 color: #5c5c5c;
  }
  .ygzl{
@@ -607,8 +608,8 @@
 	 width: 30%;
 	 background: #f6f6f6;
 	 line-height: 96upx;
-	 font-size: 36upx;
-	 font-weight: 700;
+	 font-size: 28upx;
+	 font-weight: 550;
 	 color: #31b977;
 	 text-align: center;
  }
@@ -616,7 +617,7 @@
 	 margin-top: 30upx;
 	 display: flex;
 	 color: #222222;
-	 font-size: 34upx;
+	 font-size: 28upx;
 	 height: 80upx;
 	 line-height: 80upx;
 	 justify-content: space-between;
@@ -666,7 +667,7 @@
 	  }
 	  &-left {
 	    line-height: 100rpx;
-	    font-size: 32rpx;
+	    font-size: 28upx;
 	    font-weight: 400;
 	    color: #BABABA;
 	
@@ -689,7 +690,7 @@
 	    line-height: 100rpx;
 	    position: relative;
 	    padding-right: 20rpx;
-	    font-size: 32rpx;
+	    font-size: 28upx;
 	
 	    &.nodata {
 	      color: rgba(153, 153, 153, 1);
@@ -762,7 +763,7 @@
 }
 .order-modal-item{
 	flex:1;
-	font-size: 32upx;
+	font-size: 28upx;
 	padding: 10upx 6upx;
 	text-align: center;
 }

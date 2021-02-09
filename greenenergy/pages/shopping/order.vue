@@ -19,59 +19,52 @@
 					<view class="message-card-topRight">
 						{{getState(item.status)}}
 					</view>
-					<view class="message-card-right" >
-						<view class="message-card-right-arrow"></view>
-						
-						<view class="message-card-right-title">
-							<view class="message-card-right-title-left">
-								兑换物品:
+					<view class="message-card-right" style="display: flex;"  >
+						<view style="flex: 1;display: flex; align-items: center;justify-content: center;">
+							<image style="width: 90%;height: 90%;" :src="BASEURL+item.goodIcoImg"></image>
+						</view>
+						<view style="flex: 2;">
+							<view class="message-card-right-title">
+								<view class="message-card-right-title-right" >
+										{{item.goodsName}}
+								</view>
 							</view>
-							<view class="message-card-right-title-right" style="flex:2">
-								{{item.goodsName}}
+							<view class="message-card-right-title">
+								<view class="message-card-right-title-right">
+									兑换数量:{{item.goodsNum}}
+								</view>
+							</view>
+							<view class="message-card-right-title">
+									<view class="message-card-right-title-right" >
+									兑换时间:{{item.createTimeStr.substr(0,10)}}
+								</view>
+							</view>
+							<view class="message-card-right-title">
+								<view class="message-card-right-title-right" >
+									兑换积分:{{item.score}}
+								</view>
 							</view>
 						</view>
-						<view class="message-card-right-title">
+					</view>
+					<view class="message-card-right" style="padding-top: 0;">
+						<view class="message-card-right-title"  v-if="item.status>0">
 							<view class="message-card-right-title-left">
-								兑换数量:
+								快递名称
 							</view>
-							<view class="message-card-right-title-right" style="flex:2">
-								{{item.goodsNum}}
-							</view>
-						</view>
-						<view class="message-card-right-title">
-							<view class="message-card-right-title-left">
-								兑换时间:
-							</view>
-							<view class="message-card-right-title-right" style="flex:2">
-								{{item.createTimeStr}}
-							</view>
-						</view>
-						<view class="message-card-right-title">
-							<view class="message-card-right-title-left">
-								兑换积分:
-							</view>
-							<view class="message-card-right-title-right" style="flex:2">
-								{{item.score}}
-							</view>
-						</view>
-						<view class="message-card-right-title" v-if="item.status>0">
-							<view class="message-card-right-title-left">
-								快递名称:
-							</view>
-							<view class="message-card-right-title-right" style="flex:2">
-								{{item.expressName}}
+							<view class="message-card-right-title-right" >
+							{{item.expressName}}
 							</view>
 						</view>
 						<view class="message-card-right-title" v-if="item.status>0">
 							<view class="message-card-right-title-left">
-								快递单号:
+								快递单号
 							</view>
-							<view class="message-card-right-title-right" style="flex:2">
+							<view class="message-card-right-title-right" >
 								{{item.expressOrderNo}}
 							</view>
 						</view>
-					   <view class="message-card-right-btns" >
-							<view class="message-card-right-btns-reject" v-if="item.status==0" @click.stop="reback(item)"><view class="message-card-right-btns-reject-btn">取消</view></view>
+						<view class="message-card-right-btns" >
+							<view class="message-card-right-btns-reject" v-if="item.status==0" @click.stop="reback(item)"><view class="message-card-right-btns-reject-btn">撤回</view></view>
 							<view class="message-card-right-btns-agree" v-if="item.status==1" @click.stop="agree3(item)"><view class="message-card-right-btns-agree-btn">签收</view></view>
 						</view>
 					</view>
@@ -83,54 +76,49 @@
 					<view class="message-card-topRight" :style="{'background':item.status==2||item.status==4?'#31b977':'#F0AD4E'}">
 						{{getState(item.status)}}
 					</view>
-					<view class="message-card-right" >
-						<view class="message-card-right-arrow"></view>
-						
-						<view class="message-card-right-title">
-							<view class="message-card-right-title-left">
-								兑换物品:
+					<view class="message-card-right" style="display: flex;" >
+						<view style="flex: 1;display: flex; align-items: center;justify-content: center;">
+							<image style="width: 90%;height: 90%;" :src="BASEURL+item.goodIcoImg"></image>
+						</view>
+						<view style="flex: 2;">
+							<view class="message-card-right-title">
+								<view class="message-card-right-title-right" >
+									{{item.goodsName}}
+								</view>
 							</view>
-							<view class="message-card-right-title-right" style="flex:2">
-								{{item.goodsName}}
+							<view class="message-card-right-title">
+							
+								<view class="message-card-right-title-right" >
+									兑换数量:{{item.goodsNum}}
+								</view>
+							</view>
+							<view class="message-card-right-title">
+							
+								<view class="message-card-right-title-right" >
+									兑换时间:{{item.createTimeStr.substr(0,10)}}
+								</view>
+							</view>
+							<view class="message-card-right-title">
+								<view class="message-card-right-title-right" >
+									兑换积分:{{item.score}}
+								</view>
+							</view>
+						</view>
+					</view>
+					<view class="message-card-right" v-if="item.status>0&&item.status!=3" style="padding-top: 0;">
+						<view class="message-card-right-title" >
+							<view class="message-card-right-title-left">
+								快递名称
+							</view>
+							<view class="message-card-right-title-right" >
+							{{item.expressName}}
 							</view>
 						</view>
 						<view class="message-card-right-title">
 							<view class="message-card-right-title-left">
-								兑换数量:
+								快递单号
 							</view>
-							<view class="message-card-right-title-right" style="flex:2">
-								{{item.goodsNum}}
-							</view>
-						</view>
-						<view class="message-card-right-title">
-							<view class="message-card-right-title-left">
-								兑换时间:
-							</view>
-							<view class="message-card-right-title-right" style="flex:2">
-								{{item.createTimeStr}}
-							</view>
-						</view>
-						<view class="message-card-right-title">
-							<view class="message-card-right-title-left">
-								兑换积分:
-							</view>
-							<view class="message-card-right-title-right" style="flex:2">
-								{{item.score}}
-							</view>
-						</view>
-						<view class="message-card-right-title" v-if="item.status>0&&item.status!=3">
-							<view class="message-card-right-title-left">
-								快递名称:
-							</view>
-							<view class="message-card-right-title-right" style="flex:2">
-								{{item.expressName}}
-							</view>
-						</view>
-						<view class="message-card-right-title" v-if="item.status>0&&item.status!=3">
-							<view class="message-card-right-title-left">
-								快递单号:
-							</view>
-							<view class="message-card-right-title-right" style="flex:2">
+							<view class="message-card-right-title-right" >
 								{{item.expressOrderNo}}
 							</view>
 						</view>
@@ -157,6 +145,7 @@
 </template>
 
 <script>
+	import { BASEURLImg } from '@/common/utils.js'
 	import noMessage from '@/components/no-message/no-message.vue'
 	import iTabs from '@/components/iview/tabs/index'
 	import iTab from '@/components/iview/tab/index'
@@ -173,6 +162,7 @@
 		},
 		data() {
 			return {
+				BASEURL:BASEURLImg,
 				isShowNodata: false,
 				current: '1',
 				todoList:[],
@@ -348,7 +338,7 @@
 			reback(item){
 				let self=this;
 				uni.showModal({
-					title: '撤回兑换',
+					title: '提示',
 					    content: '确定撤回兑换',
 						showCancel:false,
 					    success: function (res) {
@@ -357,6 +347,8 @@
 								if(res.returnCode=="0"){
 									self.initPage()
 									self.searchInfo()
+								}else{
+									self.$api.msg(res.description)
 								}
 							})
 						}
@@ -394,9 +386,9 @@
 
 				&-span {
 					height: 70upx;
-					font-size: 50upx;
+					font-size: 34upx;
 					font-family: PingFangSC-Medium, PingFang SC;
-					font-weight: 600;
+					font-weight: 550;
 					color: rgba(34, 34, 34, 1);
 					line-height: 70upx;
 				}
@@ -418,9 +410,11 @@
 			height:calc(100% - 280rpx);
 			overflow-y: scroll;
 			.message-card {
-				display: flex;
+				/* display: flex; */
 				margin: 30upx 30upx 0;
 				position: relative;
+				border: 2upx solid #E3E7EB;
+				border-radius: 12upx;
 				&-topRight{
 					position: absolute;
 					right:20upx;
@@ -438,7 +432,7 @@
 				&-left {
 					width: 70upx;
 					height: 70upx;
-					font-size: 32upx;
+					font-size: 28upx;
 					display: inline-block;
 					text-align: center;
 					line-height: 70upx;
@@ -448,24 +442,15 @@
 				}
 
 				&-right {
-					flex: 1;
+					/* flex: 1; */
+					
 					position: relative;
 					padding: 22upx 22upx;
-					border: 2upx solid #E3E7EB;
-					border-radius: 12upx;
-					margin-left: 20upx;
-					&-arrow {
-						position: absolute;
-						width: 18upx;
-						height: 39upx;
-						left: -18upx;
-						top: 60upx;
-						z-index: 111;
-						background-size: 100% 100%;
-						
-					}
+					/* border: 2upx solid #E3E7EB;
+					border-radius: 12upx; */
+					/* margin-left: 20upx; */
 					&-content {
-						font-size: 30upx;
+						font-size: 28upx;
 						font-family: PingFangSC-Regular, PingFang SC;
 						font-weight: 400;
 						color: rgba(34, 34, 34, 1);
@@ -482,7 +467,7 @@
 						display: flex;
 						position: relative;
 						margin-top: 20upx;
-						font-size: 32upx;
+						font-size: 28upx;
 						font-weight: 400;
 						color: rgba(34, 34, 34, 1);
 						line-height: 60upx;
@@ -544,23 +529,21 @@
 
 					&-title {
 						display: flex;
-
 						// justify-content: space-between;
 						align-items: center;
 
 						&-left {
-							font-size: 34upx;
+							font-size: 28upx;
 							font-weight: 400;
 							color: #222222;
 							flex: 1;
-
 							span {
 								color: #4A86EC;
 							}
 						}
 
 						&-right {
-							font-size: 32upx;
+							font-size: 28upx;
 							font-weight: 400;
 							color: rgba(153, 153, 153, 1);
 						}

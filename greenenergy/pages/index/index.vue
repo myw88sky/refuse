@@ -2,19 +2,23 @@
 	<view class="content">
 		<image class="logo" src="/static/images/banner_02.jpg"></image>
 		<view class="static">
-			<view class="static-item">
-				<view class="static-item-type">累计积分</view>
-				<view class="static-item-number">0<span style="font-size: 24upx;">分</span></view>
+			<view class="static-item" style="border-radius: 20upx 0 0 20upx;">
+				<view class="static-item-type">累计牛币</view>
+				<view class="static-item-number">{{userInfo.remainScore?userInfo.remainScore:0}}<span style="font-size: 24upx;">个</span></view>
 			</view>
 			<view class="static-item">
 				<view class="static-item-type">累计回收</view>
-				<view class="static-item-number">0 <span style="font-size: 24upx;">kg</span></view>
+				<view class="static-item-number">{{totalWeight}} <span style="font-size: 24upx;">kg</span></view>
 			</view>
-			<view class="static-item">
+			<view class="static-item" style="border-radius:0 20upx 20upx 0;">
 				<view class="static-item-type">累计收益</view>
-				<view class="static-item-number">0 <span style="font-size: 24upx;">元</span></view>
+				<view class="static-item-number">{{totalPrice}}<span style="font-size: 24upx;">元</span></view>
 			</view>
 		</view>	
+		<view class="city">
+			<view class="city-item">当前城市</view>
+			<view class="city-item" style="color: #31b977;">{{city}}<uni-icons v-if="city" type="location-filled" color="#31b977" size="20"></uni-icons></view>
+		</view>
 		  <view class="page-section-spacing">
 			<swiper class="swiper" 
 				indicator-dots="true" 
@@ -43,30 +47,43 @@
 			 </view>
 		 </view> 
 		 <view class="phone">
-			 <view class="phone-item" style="margin-left: 30upx;" >服务热线</view>
-			 <view class="phone-item" style="margin-right: 30upx;display: flex;color: #31b977;" @click="openPhone()">
-				 <uni-icons type="phone-filled" color="#31b977" size="16"></uni-icons>
-			     <view>18255157968</view>
+			 <view class="phone-info"> 
+				 <view class="phone-item" style="margin-left: 30upx;" >全国服务热线</view>
+				 <view class="phone-item" style="margin-right: 30upx;display: flex;color: #31b977;" @click="openPhone('18156277182')">
+					 <uni-icons type="phone-filled" color="#31b977" size="16"></uni-icons>
+					 <view>18156277182</view>
+				 </view>
+			 </view>
+			 <view class="phone-info">
+				 <view class="phone-item" style="margin-left: 30upx;" >本地服务热线</view>
+				 <view class="phone-item" style="margin-right: 30upx;display: flex;color: #31b977;" @click="openPhone('17733360808')">
+					 <uni-icons type="phone-filled" color="#31b977" size="16"></uni-icons>
+					 <view>17733360808</view>
+				 </view>
 			 </view>
 		 </view>
+		<!-- <view class="room">
+			 <view class="room-address">门店地址</view>
+			 <view style="color:#31b977;font-size: 28upx;" @click="openMap('阜阳市颍州区长安路碧桂园.翡翠湾')"><uni-icons type="location-filled" color="#31b977" size="18"></uni-icons>安徽省阜阳市颍州区长安路(碧桂园.翡翠湾-41栋114)</view>
+		</view> -->
 		 <view class="other">
 			 <view class="other-title">
 				 其他功能
 			 </view>
 			 <view class="other-content">
-				<!-- <view class="other-content-item">
-					 <image src="/static/images/qt1.png"></image>
-					 <view>附件回收员</view>
-				 </view>
-				 <view class="other-content-item">
+				<view class="other-content-item"  @click="gotoPage('me/myAddress')">
 					 <image src="/static/images/qt2.png"></image>
-					 <view>服务咨询</view>
-				 </view> -->
+					 <view>线下门店</view>
+				 </view>
+				 <view class="other-content-item" @click="openAction()">
+					 <image src="/static/images/qt1.png"></image>
+					 <view>活动中心</view>
+				 </view>
 				 <view class="other-content-item" @click="changePage()">
 					 <image src="/static/images/qt3.png"></image>
-					 <view>积分商城</view>
+					 <view>变废为宝</view>
 				 </view>
-				 <view class="other-content-item" @click="gotoPage()">
+				 <view class="other-content-item" @click="gotoPage('order/address')">
 					 <image src="/static/images/qt4.png"></image>
 					 <view>地址管理</view>
 				 </view>
@@ -86,7 +103,12 @@
 
 <script>
 	import uniIcons from "@/components/uni-icons/uni-icons.vue"
-	import {fakeLogin} from"@/api/index.js"
+	import {fakeLogin,getIndexTotal} from"@/api/index.js"
+	import {
+		geocoder,
+		getLocation,
+		reverseGeocoder,
+	} from '@/common/qqmap-util.js'
 	export default {
 		components:{
 			uniIcons
@@ -108,17 +130,80 @@
 				model:{
 					userAddress:"",//预约地址
 					addressId:""
-				}
+				},
+				city:"",
+				totalPrice:"0",
+				totalWeight:"0"
 			}
 		},
 		onLoad() {
-		
           /* this.getWeiUser=uni.getStorageSync("WeiUser")
 		  if(this.getWeiUser){
 			  this.login()
 		  } */
+		   this.getCurLocation()
+		   
+		},
+		onShow() {
+			this.userInfo=getApp().globalData.userInfo
+			this.getIndexTotal()
 		},
 		methods: {
+			openMap(e){
+				let self=this;
+				geocoder(e).then(res => {
+					const latitude = res.result.location.lat
+					const longitude = res.result.location.lng
+					wx.openLocation({
+					  latitude,
+					  longitude,
+					  scale: 18
+					})
+				}).catch(err => {
+						
+				})
+			},
+			getIndexTotal(){
+				getIndexTotal().then(res=>{
+					this.totalWeight=res.result.totalWeight
+					this.totalPrice=res.result.totalPrice
+				})
+			},
+			getCurLocation() {
+				 uni.showLoading({
+				 	title: '加载中...'
+				 })
+				var self = this;
+				getLocation().then(res => {
+						const {
+							longitude,
+							latitude
+						} = res
+						self.getLocationInfo({
+							longitude,
+							latitude
+						})
+						uni.hideLoading();
+					}).catch(arr => {
+						uni.hideLoading();
+						if(arr&&arr.errCode===1&&arr.errMsg==="getLocation:fail:ERROR_NETWORK"){
+							self.$api.msg("检查网络是否开启",3000)
+						}
+						if(arr&&arr.errCode===2&&arr.errMsg==="getLocation:fail:ERROR_NOCELL&WIFI_LOCATIONSWITCHOFF"){
+							self.$api.msg("检查gps是否开启",3000)
+						}
+					})
+			},
+			getLocationInfo(location) {
+				let self=this;
+				reverseGeocoder(location).then(res => {
+						if(res.result){
+							self.city=res.result.ad_info.city
+						}
+					}).catch(err => {
+						
+					})
+			},
 			addOrder(type){
 			   this.userInfo=getApp().globalData.userInfo
 			   if(JSON.stringify(this.userInfo)=='{}'){
@@ -144,7 +229,7 @@
 					}
 				})
 			},
-			gotoPage(){
+			gotoPage(e){
 				this.userInfo=getApp().globalData.userInfo
 				if(JSON.stringify(this.userInfo)=='{}'){
 				   uni.navigateTo({
@@ -152,17 +237,21 @@
 				   })
 				}
 				uni.navigateTo({
-					url:"../order/address"
+					url:"/pages/"+e
 				})
+			},
+			openAction(){
+				this.$api.msg('暂时没有活动')
+				return false;
 			},
 			changePage(){
 				uni.switchTab({
 					url:"../shopping/shopping"
 				})
 			},
-			openPhone(){
+			openPhone(e){
 				uni.makePhoneCall({
-				    phoneNumber: '18255157968' //仅为示例
+				    phoneNumber: e //仅为示例
 				});
 			},
 			getSelectAddress(item){
@@ -179,15 +268,16 @@
 		height: auto;
 	}
 	.logo {
-		height: 300upx;
-		width: calc(100% - 60upx);
+		height: 400upx;
+		width: 100%;
+		/* width: calc(100% - 60upx);
 		margin: 30upx 30upx;
-		margin-top: 20upx;
+		margin-top: 20upx; */
 	}
 	.static{
-		height: 200upx;
+		/* height: 200upx; */
 		width: calc(100% - 60upx);
-		margin: 30upx 30upx;
+		margin:-70upx 30upx 0;
 		background: white;
 		-webkit-box-shadow: 0px 0px 20upx 0px rgba(0, 0, 0, 0.1);
 		box-shadow: 0px 0px 20upx 0px rgba(0, 0, 0, 0.1);
@@ -203,15 +293,29 @@
 	.static-item{
 		flex:1;
 		text-align: center;
+		background-color: rgb(255,255,255);
 	}
 	.static-item-type{
-		font-size: 36upx;
+		padding-top: 20upx;
+		font-size: 32upx;
 		color: #222222;
 	}
 	.static-item-number{
-		margin-top: 40upx;
-		font-size: 50upx;
+		margin-top: 4upx;
+		font-size: 40upx;
 		color: #31b977;
+		padding-bottom: 20upx;
+	}
+	.city{
+		width: calc(100% - 60upx);
+		margin: 30upx 30upx;	
+		display: flex;
+		align-items:center;
+		justify-content:space-between;
+	}
+	.city-item{
+		font-size: 30upx;
+		color: #000000;
 	}
     .page-section-spacing{
 		width: calc(100% - 60upx);
@@ -249,23 +353,50 @@
 		margin: 30upx 30upx;
 		background-color: #F7F7F7;
 		border-radius: 20upx 20upx 20upx 20upx;
-		display: flex;
 		height: 140upx;
+	}
+	.phone-info{
+		padding-top: 20upx;
+		display: flex;
 		align-items:center;
 		justify-content:space-between;
 	}
     .phone-item{
-		font-size: 32upx;
+		font-size: 28upx;
 		color: #222222;
+	}
+	.room{
+		width: calc(100% - 60upx);
+		margin: 30upx 30upx;
+		display: flex;
+		/* background-color: #EEEEEE;
+		border-radius: 20upx 20upx 20upx 20upx; */
+	}
+	.room-address{
+		color: #000000;
+		font-size: 32upx;
+		font-weight: 600;
+		width: 170upx;
+	}
+	.room-info{
+		display: flex;
+		align-items:center;
+		justify-content:space-between;
+		color: #19BE6B;
+		font-size: 30upx;
+	}
+	.room-info-item{
+		flex:1;
+		padding: 20upx;
 	}
 	.other{
         width: calc(100% - 60upx);
 		margin: 30upx 30upx 60upx;
 	}	
 	.other-title{
-		font-size: 40upx;
+		font-size: 32upx;
 		color: #222222;
-		font-weight: 700;
+		font-weight: 600;
 	}
 	.other-content{
 		margin-top: 60upx;

@@ -59,7 +59,7 @@
 					username:self.wUserInfo.weiOpenId,
 					name:self.wUserInfo.nickName,
 					userType:4,//1：超级管理员 2：普通管理员 3：员工 4：客户
-					phone:"18255157968"
+					phone:'12345678901'
 				}
 				addWxUser(data).then(res=>{
 					if(res.returnCode=="0"||res.returnCode=="2"){
@@ -112,10 +112,12 @@
 	  height: 180upx;
 	  margin: 0 auto;
 	  margin-top: 260upx;
+	 
   }
   .logo image{
 	  width: 100%;
 	  height: 100%;
+	   border-radius: 20upx;
   }
   .logo-txt{
   	  margin:  0 auto;
