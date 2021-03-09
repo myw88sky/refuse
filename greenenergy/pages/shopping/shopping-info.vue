@@ -15,7 +15,7 @@
 			<view class="content-info-title">{{model.name}}</view>
 			<view class="content-info-main">
 				<view class="content-info-main-name">{{model.desc}}</view>
-				<view class="content-info-main-number">库存剩余：{{model.total}}件</view>
+				<view class="content-info-main-number">库存:{{model.total}}件</view>
 			</view>
 			<view class="content-info-main">
 				<view class="content-info-main-points">{{model.score}}（牛币）</view>
@@ -100,7 +100,7 @@
 <style>
 .content-lunbo{
 	width: 100%;
-	height: 720rpx;
+	height: 796upx;
 }
 .swiper{
 	height: 100%;
@@ -108,7 +108,7 @@
  }
  swiper-item image{
 	width: 100%;
-	height: 720rpx;
+	height: 796upx;
  }
  .content-info{
 	 margin: 30upx;
@@ -125,10 +125,13 @@
 	justify-content:space-between;
 }
 .content-info-main-name{
+	flex:3;
 	color: #8C8C8C;
 }
 .content-info-main-number{
+	flex:1;
 	color: #8C8C8C;
+	text-align: right;
 }
 .content-info-main-points{
 	font-size: 28upx;
@@ -153,7 +156,7 @@
 }
 .shopping-info-img{
 	width: 100%;
-	height: 500upx;
+	height: 1040upx;
 	margin-top: 6upx;
 }
 .shopping-info-img image{

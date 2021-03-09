@@ -148,7 +148,7 @@
 							})	
 						},1500)
 					}else{
-						this.$api.msg(res.description)
+						this.$api.msg('剩余牛币不够')
 					}
 				})
 			}

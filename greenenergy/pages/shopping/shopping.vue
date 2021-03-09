@@ -235,7 +235,7 @@
         flex-direction: column;
         overflow: hidden;
         background-color: #ffffff;
-		height: 100vh;
+		/* height: 100vh; */
     }
 
     .scroll-h {
@@ -365,18 +365,19 @@
     }
 	.shop-list{
 		display: flex;
+		
 		padding: 30upx;
 		height: auto;
 	}
 	.shop-list-img{
 		width: 230upx;
-		height: 230upx;
 	}
 	.shop-list-img image{
-		width: 100%;
-		height: 100%;
+		width: 230upx;
+		height: 230upx;
 	}
 	.shop-list-info{
+		width: calc(100% - 260upx);
 		padding-left: 30upx;
 	}
 	.shop-list-info-title{

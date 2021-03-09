@@ -2,7 +2,10 @@
 	import {fakeLogin,getWeiOpenId} from"@/api/index.js"
 	export default {
 		onLaunch: function() {
-
+			wx.showShareMenu({
+			  withShareTicket: true,
+			  menus: ['shareAppMessage', 'shareTimeline']
+			})
 			let self=this;
 			this.autoUpdate();
 			// 1.wx获取登录用户code
